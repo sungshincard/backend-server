@@ -1,5 +1,6 @@
 package com.sungshincard.backend.domain.member.service;
 
+import com.sungshincard.backend.config.security.JwtTokenProvider;
 import com.sungshincard.backend.domain.member.entity.Member;
 import com.sungshincard.backend.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public Long join(String email, String password, String nickname) {
@@ -30,5 +32,16 @@ public class MemberService {
                 .build();
 
         return memberRepository.save(member).getId();
+    }
+
+    public String login(String email, String password) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found."));
+
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            throw new IllegalArgumentException("Invalid password.");
+        }
+
+        return jwtTokenProvider.createToken(member.getEmail(), member.getRole().name());
     }
 }

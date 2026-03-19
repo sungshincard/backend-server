@@ -22,3 +22,7 @@ mybatis:
 logging:
   level:
     com.sungshincard.backend: debug
+
+jwt:
+  secret: your-very-secure-random-secret-key-that-is-at-least-32-characters-long
+  expiration: 86400000 # 24 hours

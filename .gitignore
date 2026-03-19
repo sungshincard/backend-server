@@ -1,0 +1,46 @@
+### Java ###
+*.class
+*.log
+*.ctxt
+.mtj.tmp/
+*.jar
+*.war
+*.ear
+hs_err_pid*
+
+### Gradle ###
+.gradle
+build/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+### Eclipse ###
+.settings/
+bin/
+.project
+.classpath
+.factorypath
+
+### VS Code ###
+.vscode/
+
+### macOS ###
+.DS_Store
+
+### Windows ###
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+### Secrets ###
+*.jks
+*.p12
+*.key
+*.pem
+# application.yml에 비밀정보가 노출되지 않도록 주의 필요
+# application-local.yml 등의 파일 사용 시 추가 권장

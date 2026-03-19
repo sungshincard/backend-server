@@ -26,6 +26,22 @@ public class MemberController {
         return ApiResponse.success(memberId, "Registration successful.");
     }
 
+    @PostMapping("/login")
+    public ApiResponse<String> login(@RequestBody @Valid LoginRequest request) {
+        String token = memberService.login(request.getEmail(), request.getPassword());
+        return ApiResponse.success(token, "Login successful.");
+    }
+
+    @Getter
+    @Setter
+    public static class LoginRequest {
+        @Email
+        @NotBlank
+        private String email;
+        @NotBlank
+        private String password;
+    }
+
     @Getter
     @Setter
     public static class JoinRequest {

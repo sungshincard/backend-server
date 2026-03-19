@@ -10,9 +10,9 @@
 - [/] **핵심 기능 개발 - 백엔드**
     - [/] 사용자(Member) 및 인증(Security/JWT) 시스템
         - [O] `Member` 엔티티 및 `Repository` (JPA) 구현
-        - [O] `MemberService` (회원가입 로직) 및 `MemberController` (Join API) 구현
-        - [O] `SecurityConfig` (BCryptPasswordEncoder) 기초 설정
-        - [ ] JWT 발급 및 로그인 필터 구현
+        - [O] `MemberService` (회원가입/로그인 로직) 및 `MemberController` (Join/Login API) 구현
+        - [O] `SecurityConfig` (BCryptPasswordEncoder, JWT Filter) 설정
+        - [O] JWT 발급 및 인증 필터 구현
     - [ ] 상품(Product/Card) 카탈로그 및 검색 기능 (MyBatis 활용)
     - [ ] 입찰(Bidding) 및 즉시 구매/판매 시스템
     - [ ] 정산 및 거래 상태(Trade State) 관리 시스템
