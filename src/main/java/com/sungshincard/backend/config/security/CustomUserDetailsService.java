@@ -23,7 +23,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Member not found with email: " + email));
 
+        boolean isEnabled = (member.getStatus() == Member.Status.ACTIVE);
+
         return new User(member.getEmail(), member.getPassword(),
+                isEnabled, true, true, true,
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_" + member.getRole().name())));
     }
 }
