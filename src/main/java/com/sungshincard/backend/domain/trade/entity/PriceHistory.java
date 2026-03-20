@@ -1,7 +1,6 @@
 package com.sungshincard.backend.domain.trade.entity;
 
 import com.sungshincard.backend.domain.product.entity.CardMaster;
-import com.sungshincard.backend.domain.product.entity.Listing;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

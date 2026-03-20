@@ -8,53 +8,53 @@
 
 ## [Phase 0] 프로젝트 초기 설정 및 기획
 
-- [x] 기술 스택 및 아키텍처 확정
-    - [x] Spring Boot + Java 17 기반 백엔드 구성
-    - [x] Gradle 기반 프로젝트 구성
-    - [x] MySQL 사용 확정
-    - [x] Spring Data JPA + MyBatis 병행 사용 확정
-    - [x] Vue.js 프론트엔드 분리 구조 확정
-    - [x] Redis 활용 방향 정의
-- [x] 프로젝트 기본 구조 세팅
-    - [x] Gradle 빌드 환경 설정
-    - [x] `application.yml` 설정
-    - [x] 기본 패키지 구조 세팅
-- [x] 공통 API 응답 규격 정의
-    - [x] `ApiResponse` 객체 구현
-    - [x] `GlobalExceptionHandler` 구현
-- [x] 서비스 구조 및 도메인 방향 정리
-    - [x] 카드 도감 기반 서비스 구조 확정
-    - [x] 출품형 거래 구조 확정
-    - [x] 판매자 → 구매자 직접 거래 구조 확정
-    - [x] 에스크로 기반 결제/정산 구조 확정
-    - [x] 실시간 채팅 제외 방향 확정
-    - [x] 공개 프로필 / 판매목록 / 거래후기 / 평점 구조 반영
-    - [x] 상품 문의 댓글 / 구매 전 문의 / 거래 후 후기 구조 반영
-- [x] 핵심 도메인 분석 및 설계 초안 작성
-    - [x] `Member`
-    - [x] `Store`
-    - [x] `Address`
-    - [x] `CardMaster`
-    - [x] `CardRequest`
-    - [x] `Listing`
-    - [x] `ListingImage`
-    - [x] `Order`
-    - [x] `Payment`
-    - [x] `Shipment`
-    - [x] `Settlement`
-    - [x] `TradeHistory`
-    - [x] `PriceHistory`
-    - [x] `Watchlist`
-    - [x] `InquiryComment`
-    - [x] `Review`
-    - [x] `Dispute`
-    - [x] `Notification`
-    - [x] `AdminActionLog`
-- [x] DB 설계 초안 작성
-    - [x] ERD 표 정리
-    - [x] Mermaid ERD 작성
-    - [x] MySQL DDL 초안 작성
-    - [x] JPA 엔티티 초안 작성 방향 정리
+- [o] 기술 스택 및 아키텍처 확정
+    - [o] Spring Boot + Java 17 기반 백엔드 구성
+    - [o] Gradle 기반 프로젝트 구성
+    - [o] MySQL 사용 확정
+    - [o] Spring Data JPA + MyBatis 병행 사용 확정
+    - [o] Vue.js 프론트엔드 분리 구조 확정
+    - [o] Redis 활용 방향 정의
+- [o] 프로젝트 기본 구조 세팅
+    - [o] Gradle 빌드 환경 설정
+    - [o] `application.yml` 설정
+    - [o] 기본 패키지 구조 세팅
+- [o] 공통 API 응답 규격 정의
+    - [o] `ApiResponse` 객체 구현
+    - [o] `GlobalExceptionHandler` 구현
+- [o] 서비스 구조 및 도메인 방향 정리
+    - [o] 카드 도감 기반 서비스 구조 확정
+    - [o] 출품형 거래 구조 확정
+    - [o] 판매자 → 구매자 직접 거래 구조 확정
+    - [o] 에스크로 기반 결제/정산 구조 확정
+    - [o] 실시간 채팅 제외 방향 확정
+    - [o] 공개 프로필 / 판매목록 / 거래후기 / 평점 구조 반영
+    - [o] 상품 문의 댓글 / 구매 전 문의 / 거래 후 후기 구조 반영
+- [o] 핵심 도메인 분석 및 설계 초안 작성
+    - [o] `Member`
+    - [o] `Store`
+    - [o] `Address`
+    - [o] `CardMaster`
+    - [o] `CardRequest`
+    - [o] `Listing`
+    - [o] `ListingImage`
+    - [o] `Order`
+    - [o] `Payment`
+    - [o] `Shipment`
+    - [o] `Settlement`
+    - [o] `TradeHistory`
+    - [o] `PriceHistory`
+    - [o] `Watchlist`
+    - [o] `InquiryComment`
+    - [o] `Review`
+    - [o] `Dispute`
+    - [o] `Notification`
+    - [o] `AdminActionLog`
+- [o] DB 설계 초안 작성
+    - [o] ERD 표 정리
+    - [o] Mermaid ERD 작성
+    - [o] MySQL DDL 초안 작성
+    - [o] JPA 엔티티 초안 작성 방향 정리
 - [ ] **[New] 레거시 도메인 정리**
     - [ ] 기존 설계의 `Bid`, `Inspection`, `Trade` 등 미사용 엔티티 및 관련 클래스 삭제/정리
 
@@ -64,26 +64,26 @@
 
 ### 회원 / 인증 / 상점
 - [/] 회원 및 인증 기능
-    - [x] `Member` 엔티티 구현
-    - [x] `MemberRepository` 구현
-    - [x] `MemberService` 회원가입/로그인 로직 구현
-    - [x] `MemberController` Join/Login API 구현
-    - [x] `SecurityConfig` 설정
-    - [x] JWT 발급 및 인증 필터 구현
-    - [ ] 회원 상태 필드 추가 (`ACTIVE`, `SUSPENDED`, `WITHDRAWN`)
-    - [ ] 권한 확장 (`USER`, `ADMIN`, `OPERATOR`)
-    - [ ] `Address` 엔티티 및 배송지 관리 API 구현
-    - [ ] `Store` 엔티티 구현
+    - [o] `Member` 엔티티 구현
+    - [o] `MemberRepository` 구현
+    - [o] `MemberService` 회원가입/로그인 로직 구현
+    - [o] `MemberController` Join/Login API 구현
+    - [o] `SecurityConfig` 설정
+    - [o] JWT 발급 및 인증 필터 구현
+    - [o] 회원 상태 필드 추가 (`ACTIVE`, `SUSPENDED`, `WITHDRAWN`)
+    - [o] 권한 확장 (`USER`, `ADMIN`, `OPERATOR`)
+    - [o] `Address` 엔티티 구현 (배송지 관리 API 미구현)
+    - [o] `Store` 엔티티 구현
     - [ ] 공개 상점 페이지 API 구현
-    - [ ] 판매자 소개/프로필 편집 기능 구현
+    - [o] 판매자 소개/프로필 편집 기능 구현 (`PATCH /member/me`, `PATCH /member/me/profile-image`)
     - [ ] 후기 통계/평점 집계 기능 구현
 
 ### 공통 엔티티 기반 구성
-- [ ] JPA 공통 기반 정리
-    - [ ] `BaseTimeEntity` 추가
-    - [ ] JPA Auditing 설정
-    - [ ] enum 분리
-    - [ ] 패키지 구조 정리
+- [/] JPA 공통 기반 정리
+    - [ ] `BaseTimeEntity` 추가 (각 엔티티에 직접 `@CreatedDate/@LastModifiedDate` 사용 중)
+    - [o] JPA Auditing 설정 (`@EnableJpaAuditing` in `BackendApplication`)
+    - [o] enum 분리 (각 엔티티 내 enum 정의 완료)
+    - [o] 패키지 구조 정리 (`domain/member`, `domain/product`, `domain/order` 등)
 
 ---
 
@@ -383,11 +383,11 @@
     - [ ] 프로필 공개 범위
 
 ### 현재 진행상황 요약
-- [x] 프로젝트 초기 설정 완료
-- [x] 회원가입/로그인 및 JWT 인증 기본 구현 완료
-- [x] 공통 응답 및 예외 처리 완료
-- [x] 서비스 방향 재정리 완료
-- [x] ERD / DDL / JPA 엔티티 초안 정리 완료
+- [o] 프로젝트 초기 설정 완료
+- [o] 회원가입/로그인 및 JWT 인증 기본 구현 완료
+- [o] 공통 응답 및 예외 처리 완료
+- [o] 서비스 방향 재정리 완료
+- [o] ERD / DDL / JPA 엔티티 초안 정리 완료
 - [ ] 카드 도감 기능 미구현
 - [ ] 카드 추가 요청 기능 미구현
 - [ ] 출품 기능 미구현
