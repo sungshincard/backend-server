@@ -163,6 +163,7 @@
 - **Address**: 회원 배송지 정보
 
 ### 6.2 카드 도감/출품
+- **Pokemon**: 포켓몬 메타 데이터 (도감번호, 이름, 속성, 지방 등) 및 CardMaster 연동
 - **CardMaster**: 카드 도감 정보
 - **CardRequest**: 회원의 카드 추가 요청
 - **Listing**: 회원이 등록한 실물 카드 출품 정보
@@ -214,6 +215,8 @@
 - 회원 가입/로그인 API 개발
 
 ### Phase 2. 카드 도감 및 출품 구조 구축
+- Pokemon 도메인 설계 및 CardMaster 연관관계(`pokemon_id`) 매핑
+- 포켓몬 도감 전체 목록 및 특정 포켓몬 관련 판매 카드 목록 API 개발
 - CardMaster 설계 및 CRUD
 - CardRequest 기능 개발
 - Listing / ListingImage 설계 및 출품 API 개발
