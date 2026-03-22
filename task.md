@@ -72,7 +72,7 @@
     - [o] JWT 발급 및 인증 필터 구현
     - [o] 회원 상태 필드 추가 (`ACTIVE`, `SUSPENDED`, `WITHDRAWN`)
     - [o] 권한 확장 (`USER`, `ADMIN`, `OPERATOR`)
-    - [o] `Address` 엔티티 구현 (배송지 관리 API 미구현)
+    - [o] `Address` 엔티티 구현 및 배송지 관리 API 구현 완료
     - [o] `Store` 엔티티 구현
     - [ ] 공개 상점 페이지 API 구현
     - [o] 판매자 소개/프로필 편집 기능 구현 (`PATCH /member/me`, `PATCH /member/me/profile-image`)
