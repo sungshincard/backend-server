@@ -3,7 +3,7 @@ package com.sungshincard.backend.domain.trade.entity;
 import com.sungshincard.backend.domain.member.entity.Member;
 import com.sungshincard.backend.domain.order.entity.Orders;
 import com.sungshincard.backend.domain.product.entity.CardMaster;
-import com.sungshincard.backend.domain.product.entity.Listing;
+import com.sungshincard.backend.domain.product.entity.SaleCard;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,8 +30,8 @@ public class TradeHistory {
     private CardMaster cardMaster;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "listing_id", nullable = false)
-    private Listing listing;
+    @JoinColumn(name = "sale_card_id", nullable = false)
+    private SaleCard saleCard;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_member_id", nullable = false)
@@ -43,11 +43,11 @@ public class TradeHistory {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "condition_grade", nullable = false)
-    private Listing.ConditionGrade conditionGrade;
+    private SaleCard.ConditionGrade conditionGrade;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "grading_company", nullable = false)
-    private Listing.GradingCompany gradingCompany;
+    private SaleCard.GradingCompany gradingCompany;
 
     @Column(name = "grading_score", length = 20)
     private String gradingScore;

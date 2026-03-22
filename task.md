@@ -36,8 +36,8 @@
     - [o] `Address`
     - [o] `CardMaster`
     - [o] `CardRequest`
-    - [o] `Listing`
-    - [o] `ListingImage`
+    - [o] `SaleCard`
+    - [o] `SaleCardImage`
     - [o] `Order`
     - [o] `Payment`
     - [o] `Shipment`
@@ -118,10 +118,10 @@
 
 ## [Phase 3] 상품 출품 인프라 및 전시
 
-### 출품(Listing)
+### 출품(SaleCard)
 - [ ] 출품 도메인 구현
-    - [ ] `Listing` 엔티티 구현
-    - [ ] `ListingImage` 엔티티 구현
+    - [ ] `SaleCard` 엔티티 구현
+    - [ ] `SaleCardImage` 엔티티 구현
 - [ ] 출품 기능 구현
     - [ ] 출품 등록 API
     - [ ] 출품 수정 API

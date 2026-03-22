@@ -12,17 +12,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table(name = "listing_image")
+@Table(name = "sale_card_image")
 @EntityListeners(AuditingEntityListener.class)
-public class ListingImage {
+public class SaleCardImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "listing_id", nullable = false)
-    private Listing listing;
+    @JoinColumn(name = "sale_card_id", nullable = false)
+    private SaleCard saleCard;
 
     @Column(name = "image_url", nullable = false, length = 500)
     private String imageUrl;

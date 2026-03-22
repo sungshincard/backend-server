@@ -14,9 +14,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table(name = "listing")
+@Table(name = "sale_card")
 @EntityListeners(AuditingEntityListener.class)
-public class Listing {
+public class SaleCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

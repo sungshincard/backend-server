@@ -1,7 +1,7 @@
 package com.sungshincard.backend.domain.order.entity;
 
 import com.sungshincard.backend.domain.member.entity.Member;
-import com.sungshincard.backend.domain.product.entity.Listing;
+import com.sungshincard.backend.domain.product.entity.SaleCard;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -24,8 +24,8 @@ public class Orders {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "listing_id", nullable = false, unique = true)
-    private Listing listing;
+    @JoinColumn(name = "sale_card_id", nullable = false, unique = true)
+    private SaleCard saleCard;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_member_id", nullable = false)
