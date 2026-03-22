@@ -3,7 +3,9 @@ package com.sungshincard.backend.domain.member.service;
 import com.sungshincard.backend.config.security.JwtTokenProvider;
 import com.sungshincard.backend.domain.member.controller.MemberController;
 import com.sungshincard.backend.domain.member.entity.Member;
+import com.sungshincard.backend.domain.member.entity.Store;
 import com.sungshincard.backend.domain.member.repository.MemberRepository;
+import com.sungshincard.backend.domain.member.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.time.LocalDate;
 public class MemberService {
 
   private final MemberRepository memberRepository;
+  private final StoreRepository storeRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
 
@@ -51,7 +54,15 @@ public class MemberService {
         .role(Member.Role.USER)
         .build();
 
-    return memberRepository.save(member).getId();
+    Member savedMember = memberRepository.save(member);
+    Store store = Store.builder()
+        .member(savedMember)
+        .storeName(nickname + "님의 상점")
+        .intro("환영합니다!")
+        .build();
+    storeRepository.save(store);
+
+    return savedMember.getId();
   }
 
   public String login(String email, String password) {
@@ -74,6 +85,26 @@ public class MemberService {
     Member member = memberRepository.findByEmail(email)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다: " + email));
 
+    Store store = storeRepository.findByMember(member).orElse(null);
+    MemberController.StoreResponse storeResponse = null;
+    if (store != null) {
+        storeResponse = new MemberController.StoreResponse(
+            store.getStoreName(),
+            store.getIntro(),
+            store.getRatingAvg() != null ? store.getRatingAvg().doubleValue() : 0.0,
+            store.getReviewCount(),
+            store.getCompletedSaleCount()
+        );
+    } else {
+        storeResponse = new MemberController.StoreResponse(
+            member.getNickname() + "님의 상점",
+            "환영합니다!",
+            0.0,
+            0,
+            0
+        );
+    }
+
     return new MemberController.MemberProfileResponse(
         member.getEmail(),
         member.getNickname(),
@@ -83,7 +114,8 @@ public class MemberService {
         member.getGender().name(),
         member.getStatus().name(),
         member.getRole().name(),
-        member.getProfileImageUrl());
+        member.getProfileImageUrl(),
+        storeResponse);
   }
 
   @Transactional

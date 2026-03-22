@@ -81,6 +81,18 @@ public class MemberController {
         private String status;
         private String role;
         private String profileImageUrl;
+        private StoreResponse store;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class StoreResponse {
+        private String storeName;
+        private String intro;
+        private Double ratingAvg;
+        private Integer reviewCount;
+        private Integer completedSaleCount;
     }
 
     @Getter
