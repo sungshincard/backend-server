@@ -1,9 +1,10 @@
 package com.sungshincard.backend.domain.admin.entity;
 
+import com.sungshincard.backend.common.entity.BaseTimeEntity;
+
 import com.sungshincard.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "admin_action_log")
 @EntityListeners(AuditingEntityListener.class)
-public class AdminActionLog {
+public class AdminActionLog extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,8 +42,4 @@ public class AdminActionLog {
 
     @Column(name = "after_data", columnDefinition = "JSON")
     private String afterData;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 }

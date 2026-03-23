@@ -1,9 +1,10 @@
 package com.sungshincard.backend.domain.trade.entity;
 
+import com.sungshincard.backend.common.entity.BaseTimeEntity;
+
 import com.sungshincard.backend.domain.product.entity.CardMaster;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
     @UniqueConstraint(columnNames = {"card_master_id", "condition_grade", "grading_company", "price_date"})
 })
 @EntityListeners(AuditingEntityListener.class)
-public class PriceHistory {
+public class PriceHistory extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,10 +52,6 @@ public class PriceHistory {
     @Column(name = "trade_count", nullable = false)
     @Builder.Default
     private Integer tradeCount = 0;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 
     public enum ConditionGrade {
         ALL, S, A, B, C, D

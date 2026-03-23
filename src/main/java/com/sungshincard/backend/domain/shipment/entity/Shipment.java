@@ -1,11 +1,11 @@
 package com.sungshincard.backend.domain.shipment.entity;
 
+import com.sungshincard.backend.common.entity.BaseTimeEntity;
+
 import com.sungshincard.backend.domain.member.entity.Address;
 import com.sungshincard.backend.domain.order.entity.Orders;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "shipment")
 @EntityListeners(AuditingEntityListener.class)
-public class Shipment {
+public class Shipment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,14 +51,6 @@ public class Shipment {
 
     @Column(name = "delivered_at")
     private LocalDateTime deliveredAt;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
     public enum Status {
         READY, IN_TRANSIT, DELIVERED, LOST, RETURNED

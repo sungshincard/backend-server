@@ -1,11 +1,11 @@
 package com.sungshincard.backend.domain.order.entity;
 
+import com.sungshincard.backend.common.entity.BaseTimeEntity;
+
 import com.sungshincard.backend.domain.member.entity.Member;
-import com.sungshincard.backend.domain.product.entity.Listing;
+import com.sungshincard.backend.domain.product.entity.SaleCard;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -17,15 +17,15 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "orders")
 @EntityListeners(AuditingEntityListener.class)
-public class Orders {
+public class Orders extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "listing_id", nullable = false, unique = true)
-    private Listing listing;
+    @JoinColumn(name = "sale_card_id", nullable = false, unique = true)
+    private SaleCard saleCard;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_member_id", nullable = false)
@@ -78,14 +78,6 @@ public class Orders {
 
     @Column(name = "canceled_at")
     private LocalDateTime canceledAt;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
     public enum TradeType {
         DELIVERY, FACE_TO_FACE

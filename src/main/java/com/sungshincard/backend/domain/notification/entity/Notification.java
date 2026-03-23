@@ -1,9 +1,10 @@
 package com.sungshincard.backend.domain.notification.entity;
 
+import com.sungshincard.backend.common.entity.BaseTimeEntity;
+
 import com.sungshincard.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "notification")
 @EntityListeners(AuditingEntityListener.class)
-public class Notification {
+public class Notification extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,10 +45,6 @@ public class Notification {
 
     @Column(name = "reference_id")
     private Long referenceId;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 
     public enum NotificationType {
         NEW_LISTING, ORDER_CREATED, PAYMENT_COMPLETED, TRACKING_REGISTERED, 

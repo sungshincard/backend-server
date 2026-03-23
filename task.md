@@ -36,8 +36,8 @@
     - [o] `Address`
     - [o] `CardMaster`
     - [o] `CardRequest`
-    - [o] `Listing`
-    - [o] `ListingImage`
+    - [o] `SaleCard`
+    - [o] `SaleCardImage`
     - [o] `Order`
     - [o] `Payment`
     - [o] `Shipment`
@@ -55,8 +55,8 @@
     - [o] Mermaid ERD 작성
     - [o] MySQL DDL 초안 작성
     - [o] JPA 엔티티 초안 작성 방향 정리
-- [ ] **[New] 레거시 도메인 정리**
-    - [ ] 기존 설계의 `Bid`, `Inspection`, `Trade` 등 미사용 엔티티 및 관련 클래스 삭제/정리
+- [o] **[New] 레거시 도메인 정리**
+    - [o] 기존 설계의 `Bid`, `Inspection`, `Trade` 등 미사용 엔티티 및 관련 클래스 삭제/정리
 
 ---
 
@@ -72,15 +72,15 @@
     - [o] JWT 발급 및 인증 필터 구현
     - [o] 회원 상태 필드 추가 (`ACTIVE`, `SUSPENDED`, `WITHDRAWN`)
     - [o] 권한 확장 (`USER`, `ADMIN`, `OPERATOR`)
-    - [o] `Address` 엔티티 구현 (배송지 관리 API 미구현)
+    - [o] `Address` 엔티티 구현 및 배송지 관리 API 구현 완료
     - [o] `Store` 엔티티 구현
-    - [ ] 공개 상점 페이지 API 구현
+    - [o] 공개 상점 페이지 API 구현
     - [o] 판매자 소개/프로필 편집 기능 구현 (`PATCH /member/me`, `PATCH /member/me/profile-image`)
-    - [ ] 후기 통계/평점 집계 기능 구현
+    - [o] 후기 통계/평점 집계 기능 구현
 
 ### 공통 엔티티 기반 구성
-- [/] JPA 공통 기반 정리
-    - [ ] `BaseTimeEntity` 추가 (각 엔티티에 직접 `@CreatedDate/@LastModifiedDate` 사용 중)
+- [o] JPA 공통 기반 정리
+    - [o] `BaseTimeEntity` 추가 (각 엔티티에 직접 `@CreatedDate/@LastModifiedDate` 사용 중)
     - [o] JPA Auditing 설정 (`@EnableJpaAuditing` in `BackendApplication`)
     - [o] enum 분리 (각 엔티티 내 enum 정의 완료)
     - [o] 패키지 구조 정리 (`domain/member`, `domain/product`, `domain/order` 등)
@@ -118,10 +118,10 @@
 
 ## [Phase 3] 상품 출품 인프라 및 전시
 
-### 출품(Listing)
+### 출품(SaleCard)
 - [ ] 출품 도메인 구현
-    - [ ] `Listing` 엔티티 구현
-    - [ ] `ListingImage` 엔티티 구현
+    - [ ] `SaleCard` 엔티티 구현
+    - [ ] `SaleCardImage` 엔티티 구현
 - [ ] 출품 기능 구현
     - [ ] 출품 등록 API
     - [ ] 출품 수정 API
