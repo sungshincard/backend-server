@@ -44,6 +44,7 @@ public class CardMasterService {
                 .illustrator(requestDto.getIllustrator())
                 .expansionCode(requestDto.getExpansionCode())
                 .block(requestDto.getBlock())
+                .type(requestDto.getType())
                 .pokemonCardType(requestDto.getPokemonCardType() != null ? CardMaster.PokemonCardType.valueOf(requestDto.getPokemonCardType()) : null)
                 .subType(requestDto.getSubType())
                 .description(requestDto.getDescription())

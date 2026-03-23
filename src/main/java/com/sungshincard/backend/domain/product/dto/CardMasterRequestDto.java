@@ -21,4 +21,5 @@ public class CardMasterRequestDto {
     private String block;
     private String pokemonCardType;
     private String subType;
+    private String type;
 }

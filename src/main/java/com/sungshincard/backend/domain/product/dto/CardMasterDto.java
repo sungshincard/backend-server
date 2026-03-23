@@ -30,6 +30,7 @@ public class CardMasterDto {
     private String block;
     private String pokemonCardType;
     private String subType;
+    private String type;
     
     public static CardMasterDto from(CardMaster cardMaster) {
         return CardMasterDto.builder()
@@ -52,6 +53,7 @@ public class CardMasterDto {
                 .block(cardMaster.getBlock())
                 .pokemonCardType(cardMaster.getPokemonCardType() != null ? cardMaster.getPokemonCardType().name() : null)
                 .subType(cardMaster.getSubType())
+                .type(cardMaster.getType())
                 .build();
     }
 }

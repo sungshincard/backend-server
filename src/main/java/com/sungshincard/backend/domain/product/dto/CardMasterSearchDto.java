@@ -13,4 +13,6 @@ public class CardMasterSearchDto {
     private String rarity;
     private String pokemonCardType;
     private String subType;
+    private String type;
+    private String evolutionStage;
 }

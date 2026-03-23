@@ -61,6 +61,9 @@ public class CardRequest extends BaseTimeEntity {
     private String expansionCode;
 
     @Column(length = 50)
+    private String type;
+
+    @Column(length = 50)
     private String block;
 
     @Column(name = "reference_image_url", length = 500)

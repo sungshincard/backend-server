@@ -61,6 +61,9 @@ public class CardMaster extends BaseTimeEntity {
     @Column(name = "evolution_stage", length = 100)
     private String evolutionStage;
 
+    @Column(length = 50)
+    private String type;
+
     @Column(length = 200)
     private String illustrator;
 
