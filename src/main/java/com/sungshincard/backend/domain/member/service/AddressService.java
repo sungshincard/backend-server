@@ -68,7 +68,6 @@ public class AddressService {
                 .address1(request.getAddress1())
                 .address2(request.getAddress2())
                 .isDefault(request.getIsDefault())
-                .createdAt(address.getCreatedAt())
                 .build(); // For immutability or update logic. Better to just use entity setters, but let's emulate with builder update if there's no setter. Wait, Entity doesn't have @Setter.
         // Let's actually use a repository save or rewrite builder if the entity has no setter.
         // Ah, @Entity Address has @NoArgsConstructor but no @Setter. Let's create an update method on Address entity or replace fields via reflection/repository.save.
@@ -101,7 +100,6 @@ public class AddressService {
                 .address1(address.getAddress1())
                 .address2(address.getAddress2())
                 .isDefault(true)
-                .createdAt(address.getCreatedAt())
                 .build();
         addressRepository.save(updated);
     }
@@ -119,7 +117,6 @@ public class AddressService {
                         .address1(addr.getAddress1())
                         .address2(addr.getAddress2())
                         .isDefault(false)
-                        .createdAt(addr.getCreatedAt())
                         .build();
                 addressRepository.save(updated);
             }

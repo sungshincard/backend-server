@@ -1,9 +1,10 @@
 package com.sungshincard.backend.domain.product.entity;
 
+import com.sungshincard.backend.common.entity.BaseTimeEntity;
+
 import com.sungshincard.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
     @UniqueConstraint(columnNames = {"member_id", "card_master_id"})
 })
 @EntityListeners(AuditingEntityListener.class)
-public class Watchlist {
+public class Watchlist extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +31,4 @@ public class Watchlist {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_master_id", nullable = false)
     private CardMaster cardMaster;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 }

@@ -1,11 +1,11 @@
 package com.sungshincard.backend.domain.inquiry.entity;
 
+import com.sungshincard.backend.common.entity.BaseTimeEntity;
+
 import com.sungshincard.backend.domain.member.entity.Member;
 import com.sungshincard.backend.domain.product.entity.SaleCard;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "inquiry_comment")
 @EntityListeners(AuditingEntityListener.class)
-public class InquiryComment {
+public class InquiryComment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,14 +46,6 @@ public class InquiryComment {
     @Column(nullable = false)
     @Builder.Default
     private Status status = Status.ACTIVE;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
     public enum Status {
         ACTIVE, DELETED

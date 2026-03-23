@@ -1,10 +1,10 @@
 package com.sungshincard.backend.domain.product.entity;
 
+import com.sungshincard.backend.common.entity.BaseTimeEntity;
+
 import com.sungshincard.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "sale_card")
 @EntityListeners(AuditingEntityListener.class)
-public class SaleCard {
+public class SaleCard extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,14 +64,6 @@ public class SaleCard {
     @Column(name = "favorite_count", nullable = false)
     @Builder.Default
     private Integer favoriteCount = 0;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
     public enum ConditionGrade {
         S, A, B, C, D

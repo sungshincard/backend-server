@@ -39,7 +39,6 @@ public class StoreService {
                 .ratingAvg(store.getRatingAvg())
                 .reviewCount(store.getReviewCount())
                 .completedSaleCount(store.getCompletedSaleCount())
-                .createdAt(store.getCreatedAt())
                 .build();
         
         storeRepository.save(updatedStore);

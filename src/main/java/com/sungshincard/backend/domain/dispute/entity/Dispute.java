@@ -1,11 +1,11 @@
 package com.sungshincard.backend.domain.dispute.entity;
 
+import com.sungshincard.backend.common.entity.BaseTimeEntity;
+
 import com.sungshincard.backend.domain.member.entity.Member;
 import com.sungshincard.backend.domain.order.entity.Orders;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "dispute")
 @EntityListeners(AuditingEntityListener.class)
-public class Dispute {
+public class Dispute extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,14 +61,6 @@ public class Dispute {
 
     @Column(name = "evidence_image_url", length = 500)
     private String evidenceImageUrl;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
     public enum DisputeType {
         FAKE_SUSPECTED, DAMAGED, NOT_AS_DESCRIBED, DELIVERY_ISSUE, NO_SHIPMENT, REFUND_REQUEST, ETC

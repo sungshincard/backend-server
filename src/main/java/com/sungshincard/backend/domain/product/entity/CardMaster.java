@@ -1,10 +1,10 @@
 package com.sungshincard.backend.domain.product.entity;
 
+import com.sungshincard.backend.common.entity.BaseTimeEntity;
+
 import com.sungshincard.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
     @UniqueConstraint(columnNames = {"game_type", "set_name", "card_number", "language"})
 })
 @EntityListeners(AuditingEntityListener.class)
-public class CardMaster {
+public class CardMaster extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,14 +59,6 @@ public class CardMaster {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private Member createdBy;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
     public enum GameType {
         POKEMON, YUGIOH, ONE_PIECE, DIGIMON, ETC

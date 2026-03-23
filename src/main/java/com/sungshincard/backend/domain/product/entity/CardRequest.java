@@ -1,9 +1,10 @@
 package com.sungshincard.backend.domain.product.entity;
 
+import com.sungshincard.backend.common.entity.BaseTimeEntity;
+
 import com.sungshincard.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "card_request")
 @EntityListeners(AuditingEntityListener.class)
-public class CardRequest {
+public class CardRequest extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,10 +59,6 @@ public class CardRequest {
 
     @Column(name = "reject_reason")
     private String rejectReason;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 
     public enum Status {
         PENDING, APPROVED, REJECTED

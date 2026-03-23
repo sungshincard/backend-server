@@ -1,9 +1,9 @@
 package com.sungshincard.backend.domain.member.entity;
 
+import com.sungshincard.backend.common.entity.BaseTimeEntity;
+
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "member")
 @EntityListeners(AuditingEntityListener.class)
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,14 +66,6 @@ public class Member {
     /** 프로필 이미지 URL */
     @Column(name = "profile_image_url", length = 500)
     private String profileImageUrl;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
     // ---- 업데이트 메서드 ----
 

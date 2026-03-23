@@ -55,8 +55,8 @@
     - [o] Mermaid ERD 작성
     - [o] MySQL DDL 초안 작성
     - [o] JPA 엔티티 초안 작성 방향 정리
-- [ ] **[New] 레거시 도메인 정리**
-    - [ ] 기존 설계의 `Bid`, `Inspection`, `Trade` 등 미사용 엔티티 및 관련 클래스 삭제/정리
+- [o] **[New] 레거시 도메인 정리**
+    - [o] 기존 설계의 `Bid`, `Inspection`, `Trade` 등 미사용 엔티티 및 관련 클래스 삭제/정리
 
 ---
 
@@ -79,8 +79,8 @@
     - [o] 후기 통계/평점 집계 기능 구현
 
 ### 공통 엔티티 기반 구성
-- [/] JPA 공통 기반 정리
-    - [ ] `BaseTimeEntity` 추가 (각 엔티티에 직접 `@CreatedDate/@LastModifiedDate` 사용 중)
+- [o] JPA 공통 기반 정리
+    - [o] `BaseTimeEntity` 추가 (각 엔티티에 직접 `@CreatedDate/@LastModifiedDate` 사용 중)
     - [o] JPA Auditing 설정 (`@EnableJpaAuditing` in `BackendApplication`)
     - [o] enum 분리 (각 엔티티 내 enum 정의 완료)
     - [o] 패키지 구조 정리 (`domain/member`, `domain/product`, `domain/order` 등)
