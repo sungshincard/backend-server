@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sungshincard.backend.domain.product.repository.CardMasterMapper">
+
+    <select id="searchCardMasters" resultType="com.sungshincard.backend.domain.product.dto.CardMasterDto">
+        SELECT
+            id,
+            game_type as gameType,
+            set_name as setName,
+            card_name as cardName,
+            card_number as cardNumber,
+            rarity,
+            language,
+            manufacturer,
+            image_url as imageUrl,
+            description,
+            is_active as isActive,
+            pokemon_id as pokemonId
+        FROM card_master
+        <where>
+            is_active = true
+            <if test="gameType != null and gameType != ''">
+                AND game_type = #{gameType}
+            </if>
+            <if test="cardName != null and cardName != ''">
+                AND card_name LIKE CONCAT('%', #{cardName}, '%')
+            </if>
+            <if test="setName != null and setName != ''">
+                AND set_name LIKE CONCAT('%', #{setName}, '%')
+            </if>
+            <if test="cardNumber != null and cardNumber != ''">
+                AND card_number = #{cardNumber}
+            </if>
+            <if test="rarity != null and rarity != ''">
+                AND rarity = #{rarity}
+            </if>
+        </where>
+    </select>
+
+</mapper>

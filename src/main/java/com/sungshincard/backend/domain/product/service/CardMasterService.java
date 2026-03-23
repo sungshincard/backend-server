@@ -1,0 +1,63 @@
+package com.sungshincard.backend.domain.product.service;
+
+import com.sungshincard.backend.domain.product.dto.CardMasterDto;
+import com.sungshincard.backend.domain.product.dto.CardMasterRequestDto;
+import com.sungshincard.backend.domain.product.dto.CardMasterSearchDto;
+import com.sungshincard.backend.domain.product.entity.CardMaster;
+import com.sungshincard.backend.domain.product.entity.Pokemon;
+import com.sungshincard.backend.domain.product.repository.CardMasterMapper;
+import com.sungshincard.backend.domain.product.repository.CardMasterRepository;
+import com.sungshincard.backend.domain.product.repository.PokemonRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class CardMasterService {
+
+    private final CardMasterRepository cardMasterRepository;
+    private final PokemonRepository pokemonRepository;
+    private final CardMasterMapper cardMasterMapper;
+
+    @Transactional
+    public CardMasterDto createCardMaster(CardMasterRequestDto requestDto) {
+        Pokemon pokemon = null;
+        if (requestDto.getPokemonId() != null) {
+            pokemon = pokemonRepository.findById(requestDto.getPokemonId())
+                    .orElseThrow(() -> new IllegalArgumentException("Pokemon not found"));
+        }
+
+        CardMaster cardMaster = CardMaster.builder()
+                .gameType(CardMaster.GameType.valueOf(requestDto.getGameType()))
+                .setName(requestDto.getSetName())
+                .cardName(requestDto.getCardName())
+                .cardNumber(requestDto.getCardNumber())
+                .rarity(requestDto.getRarity())
+                .language(requestDto.getLanguage())
+                .manufacturer(requestDto.getManufacturer())
+                .imageUrl(requestDto.getImageUrl())
+                .description(requestDto.getDescription())
+                .pokemon(pokemon)
+                .isActive(true)
+                .build();
+
+        CardMaster saved = cardMasterRepository.save(cardMaster);
+        return CardMasterDto.from(saved);
+    }
+
+    @Transactional(readOnly = true)
+    public CardMasterDto getCardMaster(Long id) {
+        CardMaster cardMaster = cardMasterRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("CardMaster not found"));
+        return CardMasterDto.from(cardMaster);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CardMasterDto> searchCardMasters(CardMasterSearchDto searchDto) {
+        return cardMasterMapper.searchCardMasters(searchDto);
+    }
+}

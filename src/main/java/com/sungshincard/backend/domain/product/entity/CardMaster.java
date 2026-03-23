@@ -60,6 +60,10 @@ public class CardMaster extends BaseTimeEntity {
     @JoinColumn(name = "created_by")
     private Member createdBy;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pokemon_id")
+    private Pokemon pokemon;
+
     public enum GameType {
         POKEMON, YUGIOH, ONE_PIECE, DIGIMON, ETC
     }
