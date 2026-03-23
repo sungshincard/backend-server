@@ -30,14 +30,40 @@ public class CardRequest extends BaseTimeEntity {
     @Column(name = "game_type", nullable = false)
     private CardMaster.GameType gameType;
 
-    @Column(name = "set_name", nullable = false)
-    private String setName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private CardCategory category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "elemental_type_id")
+    private ElementalType elementalType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_set_id")
+    private CardSet cardSet;
 
     @Column(name = "card_name", nullable = false)
     private String cardName;
 
     @Column(name = "card_number", length = 100)
     private String cardNumber;
+
+    @Column(length = 100)
+    private String rarity;
+
+    private Integer hp;
+
+    @Column(name = "evolution_stage", length = 100)
+    private String evolutionStage;
+
+    @Column(length = 200)
+    private String illustrator;
+
+    @Column(name = "expansion_code", length = 50)
+    private String expansionCode;
+
+    @Column(length = 50)
+    private String block;
 
     @Column(name = "reference_image_url", length = 500)
     private String referenceImageUrl;

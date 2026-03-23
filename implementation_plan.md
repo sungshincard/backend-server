@@ -223,13 +223,14 @@
 - Spring Security + JWT 인증 구현
 - 회원 가입/로그인 API 개발
 
-### Phase 2. 카드 도감 및 출품 구조 구축
-- Pokemon 도메인 설계 및 CardMaster 연관관계(`pokemon_id`) 매핑
-- 포켓몬 도감 전체 목록 및 특정 포켓몬 관련 판매 카드 목록 API 개발
-- CardMaster 설계 및 CRUD
-- CardRequest 기능 개발
-- Listing / ListingImage 설계 및 출품 API 개발
-- 카드 검색 및 상세 페이지 기본 조회 기능 개발
+### Phase 2. 카드 도감 및 출품 구조 구축 (완료)
+- [o] Pokemon 도메인 설계 및 CardMaster 연관관계(`pokemon_id`) 매핑
+- [o] 포켓몬 도감 전체 목록 및 특정 포켓몬 관련 판매 카드 목록 API 개발
+- [o] CardMaster 설계 및 CRUD
+- [o] CardRequest 기능 개발
+- [o] [NEW] 카드 필터용 메타데이터 API 구현 (`GET /api/metadata/cards`)
+- [o] [NEW] 포켓몬 카드 메타데이터 확장 및 다중 조건 검색 구현
+- [o] [NEW] PokéAPI 연동 한국어 데이터 초기화 및 동기화 구현
 
 ### Phase 3. 주문/결제/배송 프로세스 구축
 - Order 도메인 설계

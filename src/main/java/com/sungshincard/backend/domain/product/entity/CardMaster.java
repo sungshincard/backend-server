@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "card_master", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"game_type", "set_name", "card_number", "language"})
+    @UniqueConstraint(name = "uk_card_master_composite", columnNames = {"game_type", "set_name", "card_number", "language"})
 })
 @EntityListeners(AuditingEntityListener.class)
 public class CardMaster extends BaseTimeEntity {
@@ -28,8 +28,17 @@ public class CardMaster extends BaseTimeEntity {
     @Column(name = "game_type", nullable = false)
     private GameType gameType;
 
-    @Column(name = "set_name", nullable = false)
-    private String setName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private CardCategory category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "elemental_type_id")
+    private ElementalType elementalType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_set_id")
+    private CardSet cardSet;
 
     @Column(name = "card_name", nullable = false)
     private String cardName;
@@ -49,6 +58,20 @@ public class CardMaster extends BaseTimeEntity {
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
+    private Integer hp;
+
+    @Column(name = "evolution_stage", length = 100)
+    private String evolutionStage;
+
+    @Column(length = 200)
+    private String illustrator;
+
+    @Column(name = "expansion_code", length = 50)
+    private String expansionCode;
+
+    @Column(length = 50)
+    private String block;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 
@@ -60,7 +83,15 @@ public class CardMaster extends BaseTimeEntity {
     @JoinColumn(name = "created_by")
     private Member createdBy;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pokemon_id")
+    private Pokemon pokemon;
+
     public enum GameType {
         POKEMON, YUGIOH, ONE_PIECE, DIGIMON, ETC
+    }
+
+    public enum PokemonCardType {
+        POKEMON, ENERGY, TRAINER
     }
 }

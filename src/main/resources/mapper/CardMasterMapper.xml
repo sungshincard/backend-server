@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sungshincard.backend.domain.product.repository.CardMasterMapper">
+
+    <select id="searchCardMasters" resultType="com.sungshincard.backend.domain.product.dto.CardMasterDto">
+        SELECT
+            cm.id,
+            cm.game_type as gameType,
+            cm.card_name as cardName,
+            cm.card_number as cardNumber,
+            cm.rarity,
+            cm.language,
+            cm.manufacturer,
+            cm.image_url as imageUrl,
+            cm.description,
+            cm.is_active as isActive,
+            cm.pokemon_id as pokemonId,
+            cm.hp,
+            cm.evolution_stage as evolutionStage,
+            cs.id as cardSetId,
+            cs.name as cardSetName,
+            cc.id as categoryId,
+            cc.display_name as categoryName,
+            et.id as elementalTypeId,
+            et.display_name as elementalTypeName
+        FROM card_master cm
+        LEFT JOIN card_set cs ON cm.card_set_id = cs.id
+        LEFT JOIN card_category cc ON cm.category_id = cc.id
+        LEFT JOIN elemental_type et ON cm.elemental_type_id = et.id
+        <where>
+            cm.is_active = true
+            <if test="gameType != null and gameType != ''">
+                AND cm.game_type = #{gameType}
+            </if>
+            <if test="cardName != null and cardName != ''">
+                AND cm.card_name LIKE CONCAT('%', #{cardName}, '%')
+            </if>
+            <if test="cardSetId != null">
+                AND cm.card_set_id = #{cardSetId}
+            </if>
+            <if test="cardNumber != null and cardNumber != ''">
+                AND cm.card_number = #{cardNumber}
+            </if>
+            <if test="rarity != null and rarity != ''">
+                AND cm.rarity = #{rarity}
+            </if>
+            <if test="categoryId != null">
+                AND cm.category_id = #{categoryId}
+            </if>
+            <if test="elementalTypeId != null">
+                AND cm.elemental_type_id = #{elementalTypeId}
+            </if>
+            <if test="evolutionStage != null and evolutionStage != ''">
+                AND cm.evolution_stage = #{evolutionStage}
+            </if>
+        </where>
+    </select>
+
+</mapper>
