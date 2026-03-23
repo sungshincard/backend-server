@@ -228,6 +228,8 @@
 - 포켓몬 도감 전체 목록 및 특정 포켓몬 관련 판매 카드 목록 API 개발
 - CardMaster 설계 및 CRUD
 - CardRequest 기능 개발
+- [NEW] 카드 필터용 메타데이터 API 구현 (`GET /api/metadata/cards`)
+    - 카테고리, 속성, 정렬 옵션 등 하드코딩된 항목을 API화
 - Listing / ListingImage 설계 및 출품 API 개발
 - 카드 검색 및 상세 페이지 기본 조회 기능 개발
 

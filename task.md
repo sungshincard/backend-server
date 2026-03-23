@@ -106,6 +106,10 @@
     - [o] 레어리티 필터
     - [o] 게임별 필터
     - [o] MyBatis 기반 동적 검색 구현
+- [o] 카드 필터용 메타데이터 API 구현
+    - [o] `MetadataResponse` DTO 구현
+    - [o] `MetadataController` 구현 (`GET /api/metadata/cards`)
+    - [o] 포켓몬 속성, 진화 단계 등 공통 데이터 정의
 
 ### 카드 추가 요청(CardRequest)
 - [o] 카드 추가 요청 기능 구현
