@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "card_master", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"game_type", "set_name", "card_number", "language"})
+    @UniqueConstraint(name = "uk_card_master_composite", columnNames = {"game_type", "set_name", "card_number", "language"})
 })
 @EntityListeners(AuditingEntityListener.class)
 public class CardMaster extends BaseTimeEntity {

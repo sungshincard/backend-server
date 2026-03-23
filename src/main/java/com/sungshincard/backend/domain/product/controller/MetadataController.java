@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/metadata")
+@RequestMapping("/api/v1/metadata")
 public class MetadataController {
 
     @GetMapping("/cards")

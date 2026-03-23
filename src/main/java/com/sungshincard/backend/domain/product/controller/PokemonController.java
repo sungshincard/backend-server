@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/pokemons")
+@RequestMapping("/api/v1/pokemons")
 @RequiredArgsConstructor
 public class PokemonController {
 
