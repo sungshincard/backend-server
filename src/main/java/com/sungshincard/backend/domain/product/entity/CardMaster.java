@@ -49,6 +49,20 @@ public class CardMaster extends BaseTimeEntity {
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
+    private Integer hp;
+
+    @Column(name = "evolution_stage", length = 100)
+    private String evolutionStage;
+
+    @Column(length = 200)
+    private String illustrator;
+
+    @Column(name = "expansion_code", length = 50)
+    private String expansionCode;
+
+    @Column(length = 50)
+    private String block;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 

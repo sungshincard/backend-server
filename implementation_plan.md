@@ -230,6 +230,9 @@
 - CardRequest 기능 개발
 - [NEW] 카드 필터용 메타데이터 API 구현 (`GET /api/metadata/cards`)
     - 카테고리, 속성, 정렬 옵션 등 하드코딩된 항목을 API화
+- [NEW] 포켓몬 카드 메타데이터 확장
+    - `CardMaster`, `CardRequest` 엔티티에 체력(HP), 진화단계, 일러스트레이터, 확장팩 코드, 블록 필드 추가
+    - 관련 DTO 및 프론트엔드 UI 업데이트
 - Listing / ListingImage 설계 및 출품 API 개발
 - 카드 검색 및 상세 페이지 기본 조회 기능 개발
 

@@ -23,6 +23,11 @@ public class CardMasterDto {
     private String description;
     private Boolean isActive;
     private Long pokemonId;
+    private Integer hp;
+    private String evolutionStage;
+    private String illustrator;
+    private String expansionCode;
+    private String block;
     
     public static CardMasterDto from(CardMaster cardMaster) {
         return CardMasterDto.builder()
@@ -38,6 +43,11 @@ public class CardMasterDto {
                 .description(cardMaster.getDescription())
                 .isActive(cardMaster.getIsActive())
                 .pokemonId(cardMaster.getPokemon() != null ? cardMaster.getPokemon().getId() : null)
+                .hp(cardMaster.getHp())
+                .evolutionStage(cardMaster.getEvolutionStage())
+                .illustrator(cardMaster.getIllustrator())
+                .expansionCode(cardMaster.getExpansionCode())
+                .block(cardMaster.getBlock())
                 .build();
     }
 }
