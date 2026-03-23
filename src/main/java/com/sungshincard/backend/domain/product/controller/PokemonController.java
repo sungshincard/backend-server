@@ -18,8 +18,9 @@ public class PokemonController {
     @GetMapping
     public ApiResponse<List<PokemonDto>> getAllPokemons(
             @RequestParam(required = false) String region,
-            @RequestParam(required = false) String name) {
-        return ApiResponse.success(pokemonService.getAllPokemons(region, name));
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String type) {
+        return ApiResponse.success(pokemonService.getAllPokemons(region, name, type));
     }
 
     @GetMapping("/{id}")
