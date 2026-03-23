@@ -5,8 +5,11 @@ import com.sungshincard.backend.domain.product.dto.CardMasterRequestDto;
 import com.sungshincard.backend.domain.product.dto.CardMasterSearchDto;
 import com.sungshincard.backend.domain.product.entity.CardMaster;
 import com.sungshincard.backend.domain.product.entity.Pokemon;
+import com.sungshincard.backend.domain.product.repository.CardCategoryRepository;
 import com.sungshincard.backend.domain.product.repository.CardMasterMapper;
 import com.sungshincard.backend.domain.product.repository.CardMasterRepository;
+import com.sungshincard.backend.domain.product.repository.CardSetRepository;
+import com.sungshincard.backend.domain.product.repository.ElementalTypeRepository;
 import com.sungshincard.backend.domain.product.repository.PokemonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,9 @@ public class CardMasterService {
 
     private final CardMasterRepository cardMasterRepository;
     private final PokemonRepository pokemonRepository;
+    private final CardSetRepository cardSetRepository;
+    private final CardCategoryRepository cardCategoryRepository;
+    private final ElementalTypeRepository elementalTypeRepository;
     private final CardMasterMapper cardMasterMapper;
 
     @Transactional
@@ -32,7 +38,9 @@ public class CardMasterService {
 
         CardMaster cardMaster = CardMaster.builder()
                 .gameType(CardMaster.GameType.valueOf(requestDto.getGameType()))
-                .setName(requestDto.getSetName())
+                .cardSet(requestDto.getCardSetId() != null ? cardSetRepository.findById(requestDto.getCardSetId()).orElse(null) : null)
+                .category(requestDto.getCategoryId() != null ? cardCategoryRepository.findById(requestDto.getCategoryId()).orElse(null) : null)
+                .elementalType(requestDto.getElementalTypeId() != null ? elementalTypeRepository.findById(requestDto.getElementalTypeId()).orElse(null) : null)
                 .cardName(requestDto.getCardName())
                 .cardNumber(requestDto.getCardNumber())
                 .rarity(requestDto.getRarity())
@@ -44,9 +52,6 @@ public class CardMasterService {
                 .illustrator(requestDto.getIllustrator())
                 .expansionCode(requestDto.getExpansionCode())
                 .block(requestDto.getBlock())
-                .type(requestDto.getType())
-                .pokemonCardType(requestDto.getPokemonCardType() != null ? CardMaster.PokemonCardType.valueOf(requestDto.getPokemonCardType()) : null)
-                .subType(requestDto.getSubType())
                 .description(requestDto.getDescription())
                 .pokemon(pokemon)
                 .isActive(true)

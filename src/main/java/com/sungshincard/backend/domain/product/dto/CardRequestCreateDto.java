@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class CardRequestCreateDto {
     private String gameType;
-    private String setName;
+    private Long cardSetId;
     private String cardName;
     private String cardNumber;
     private String referenceImageUrl;
@@ -16,4 +16,6 @@ public class CardRequestCreateDto {
     private String illustrator;
     private String expansionCode;
     private String block;
+    private Long categoryId;
+    private Long elementalTypeId;
 }

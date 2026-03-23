@@ -30,15 +30,17 @@ public class CardRequest extends BaseTimeEntity {
     @Column(name = "game_type", nullable = false)
     private CardMaster.GameType gameType;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "pokemon_card_type")
-    private CardMaster.PokemonCardType pokemonCardType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private CardCategory category;
 
-    @Column(name = "sub_type", length = 50)
-    private String subType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "elemental_type_id")
+    private ElementalType elementalType;
 
-    @Column(name = "set_name", nullable = false)
-    private String setName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_set_id")
+    private CardSet cardSet;
 
     @Column(name = "card_name", nullable = false)
     private String cardName;
@@ -59,9 +61,6 @@ public class CardRequest extends BaseTimeEntity {
 
     @Column(name = "expansion_code", length = 50)
     private String expansionCode;
-
-    @Column(length = 50)
-    private String type;
 
     @Column(length = 50)
     private String block;

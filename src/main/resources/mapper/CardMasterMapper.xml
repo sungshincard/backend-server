@@ -4,51 +4,54 @@
 
     <select id="searchCardMasters" resultType="com.sungshincard.backend.domain.product.dto.CardMasterDto">
         SELECT
-            id,
-            game_type as gameType,
-            set_name as setName,
-            card_name as cardName,
-            card_number as cardNumber,
-            rarity,
-            language,
-            manufacturer,
-            image_url as imageUrl,
-            description,
-            is_active as isActive,
-            pokemon_id as pokemonId,
-            hp,
-            evolution_stage as evolutionStage,
-            pokemon_card_type as pokemonCardType,
-            sub_type as subType
-        FROM card_master
+            cm.id,
+            cm.game_type as gameType,
+            cm.card_name as cardName,
+            cm.card_number as cardNumber,
+            cm.rarity,
+            cm.language,
+            cm.manufacturer,
+            cm.image_url as imageUrl,
+            cm.description,
+            cm.is_active as isActive,
+            cm.pokemon_id as pokemonId,
+            cm.hp,
+            cm.evolution_stage as evolutionStage,
+            cs.id as cardSetId,
+            cs.name as cardSetName,
+            cc.id as categoryId,
+            cc.display_name as categoryName,
+            et.id as elementalTypeId,
+            et.display_name as elementalTypeName
+        FROM card_master cm
+        LEFT JOIN card_set cs ON cm.card_set_id = cs.id
+        LEFT JOIN card_category cc ON cm.category_id = cc.id
+        LEFT JOIN elemental_type et ON cm.elemental_type_id = et.id
         <where>
-            is_active = true
+            cm.is_active = true
             <if test="gameType != null and gameType != ''">
-                AND game_type = #{gameType}
+                AND cm.game_type = #{gameType}
             </if>
             <if test="cardName != null and cardName != ''">
-                AND card_name LIKE CONCAT('%', #{cardName}, '%')
+                AND cm.card_name LIKE CONCAT('%', #{cardName}, '%')
             </if>
-            <if test="setName != null and setName != ''">
-                AND set_name LIKE CONCAT('%', #{setName}, '%')
+            <if test="cardSetId != null">
+                AND cm.card_set_id = #{cardSetId}
             </if>
             <if test="cardNumber != null and cardNumber != ''">
-                AND card_number = #{cardNumber}
+                AND cm.card_number = #{cardNumber}
             </if>
             <if test="rarity != null and rarity != ''">
-                AND rarity = #{rarity}
+                AND cm.rarity = #{rarity}
             </if>
-            <if test="pokemonCardType != null and pokemonCardType != ''">
-                AND pokemon_card_type = #{pokemonCardType}
+            <if test="categoryId != null">
+                AND cm.category_id = #{categoryId}
             </if>
-            <if test="subType != null and subType != ''">
-                AND sub_type = #{subType}
-            </if>
-            <if test="type != null and type != ''">
-                AND type = #{type}
+            <if test="elementalTypeId != null">
+                AND cm.elemental_type_id = #{elementalTypeId}
             </if>
             <if test="evolutionStage != null and evolutionStage != ''">
-                AND evolution_stage = #{evolutionStage}
+                AND cm.evolution_stage = #{evolutionStage}
             </if>
         </where>
     </select>

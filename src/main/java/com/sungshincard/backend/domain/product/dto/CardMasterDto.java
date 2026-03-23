@@ -13,7 +13,12 @@ import lombok.NoArgsConstructor;
 public class CardMasterDto {
     private Long id;
     private String gameType;
-    private String setName;
+    private Long categoryId;
+    private String categoryName;
+    private Long elementalTypeId;
+    private String elementalTypeName;
+    private Long cardSetId;
+    private String cardSetName;
     private String cardName;
     private String cardNumber;
     private String rarity;
@@ -28,15 +33,11 @@ public class CardMasterDto {
     private String illustrator;
     private String expansionCode;
     private String block;
-    private String pokemonCardType;
-    private String subType;
-    private String type;
     
     public static CardMasterDto from(CardMaster cardMaster) {
         return CardMasterDto.builder()
                 .id(cardMaster.getId())
                 .gameType(cardMaster.getGameType().name())
-                .setName(cardMaster.getSetName())
                 .cardName(cardMaster.getCardName())
                 .cardNumber(cardMaster.getCardNumber())
                 .rarity(cardMaster.getRarity())
@@ -48,12 +49,12 @@ public class CardMasterDto {
                 .pokemonId(cardMaster.getPokemon() != null ? cardMaster.getPokemon().getId() : null)
                 .hp(cardMaster.getHp())
                 .evolutionStage(cardMaster.getEvolutionStage())
-                .illustrator(cardMaster.getIllustrator())
-                .expansionCode(cardMaster.getExpansionCode())
-                .block(cardMaster.getBlock())
-                .pokemonCardType(cardMaster.getPokemonCardType() != null ? cardMaster.getPokemonCardType().name() : null)
-                .subType(cardMaster.getSubType())
-                .type(cardMaster.getType())
+                .cardSetId(cardMaster.getCardSet() != null ? cardMaster.getCardSet().getId() : null)
+                .cardSetName(cardMaster.getCardSet() != null ? cardMaster.getCardSet().getName() : null)
+                .categoryId(cardMaster.getCategory() != null ? cardMaster.getCategory().getId() : null)
+                .categoryName(cardMaster.getCategory() != null ? cardMaster.getCategory().getDisplayName() : null)
+                .elementalTypeId(cardMaster.getElementalType() != null ? cardMaster.getElementalType().getId() : null)
+                .elementalTypeName(cardMaster.getElementalType() != null ? cardMaster.getElementalType().getDisplayName() : null)
                 .build();
     }
 }

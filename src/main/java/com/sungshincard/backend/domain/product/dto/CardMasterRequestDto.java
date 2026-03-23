@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class CardMasterRequestDto {
     private String gameType;
-    private String setName;
+    private Long cardSetId;
     private String cardName;
     private String cardNumber;
     private String rarity;
@@ -19,7 +19,6 @@ public class CardMasterRequestDto {
     private String illustrator;
     private String expansionCode;
     private String block;
-    private String pokemonCardType;
-    private String subType;
-    private String type;
+    private Long categoryId;
+    private Long elementalTypeId;
 }

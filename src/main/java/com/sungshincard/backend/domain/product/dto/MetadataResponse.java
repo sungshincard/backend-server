@@ -12,10 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MetadataResponse {
-    private List<String> categories;
+    private List<KeyValue> categories;
+    private List<KeyValue> elementalTypes;
+    private List<KeyValue> cardSets;
     private List<String> sortOptions;
-    private List<String> cardTypes;
-    private List<String> cardStages;
     private List<String> conditionGrades;
     private List<String> gradingCompanies;
 
@@ -24,7 +24,8 @@ public class MetadataResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class KeyValue {
-        private String key;
-        private String value;
+        private String id;
+        private String name;
+        private String displayName;
     }
 }

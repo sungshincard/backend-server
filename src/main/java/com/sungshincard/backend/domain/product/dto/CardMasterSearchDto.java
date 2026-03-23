@@ -8,11 +8,10 @@ import lombok.Setter;
 public class CardMasterSearchDto {
     private String gameType;
     private String cardName;
-    private String setName;
+    private Long cardSetId;
     private String cardNumber;
     private String rarity;
-    private String pokemonCardType;
-    private String subType;
-    private String type;
+    private Long categoryId;
+    private Long elementalTypeId;
     private String evolutionStage;
 }

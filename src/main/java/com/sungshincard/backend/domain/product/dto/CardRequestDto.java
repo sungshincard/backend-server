@@ -1,6 +1,5 @@
 package com.sungshincard.backend.domain.product.dto;
 
-import com.sungshincard.backend.domain.product.entity.CardMaster;
 import com.sungshincard.backend.domain.product.entity.CardRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +16,12 @@ public class CardRequestDto {
     private Long id;
     private Long requesterId;
     private String gameType;
-    private String setName;
+    private Long categoryId;
+    private String categoryName;
+    private Long elementalTypeId;
+    private String elementalTypeName;
+    private Long cardSetId;
+    private String cardSetName;
     private String cardName;
     private String cardNumber;
     private String referenceImageUrl;
@@ -41,7 +45,12 @@ public class CardRequestDto {
                 .id(cardRequest.getId())
                 .requesterId(cardRequest.getRequester() != null ? cardRequest.getRequester().getId() : null)
                 .gameType(cardRequest.getGameType().name())
-                .setName(cardRequest.getSetName())
+                .cardSetId(cardRequest.getCardSet() != null ? cardRequest.getCardSet().getId() : null)
+                .cardSetName(cardRequest.getCardSet() != null ? cardRequest.getCardSet().getName() : null)
+                .categoryId(cardRequest.getCategory() != null ? cardRequest.getCategory().getId() : null)
+                .categoryName(cardRequest.getCategory() != null ? cardRequest.getCategory().getDisplayName() : null)
+                .elementalTypeId(cardRequest.getElementalType() != null ? cardRequest.getElementalType().getId() : null)
+                .elementalTypeName(cardRequest.getElementalType() != null ? cardRequest.getElementalType().getDisplayName() : null)
                 .cardName(cardRequest.getCardName())
                 .cardNumber(cardRequest.getCardNumber())
                 .referenceImageUrl(cardRequest.getReferenceImageUrl())
@@ -56,9 +65,6 @@ public class CardRequestDto {
                 .illustrator(cardRequest.getIllustrator())
                 .expansionCode(cardRequest.getExpansionCode())
                 .block(cardRequest.getBlock())
-                .type(cardRequest.getType())
-                .pokemonCardType(cardRequest.getPokemonCardType() != null ? cardRequest.getPokemonCardType().name() : null)
-                .subType(cardRequest.getSubType())
                 .build();
     }
 }

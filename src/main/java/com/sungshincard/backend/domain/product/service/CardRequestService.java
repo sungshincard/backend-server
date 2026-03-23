@@ -7,7 +7,10 @@ import com.sungshincard.backend.domain.product.dto.CardRequestDto;
 import com.sungshincard.backend.domain.product.dto.CardRequestStatusDto;
 import com.sungshincard.backend.domain.product.entity.CardMaster;
 import com.sungshincard.backend.domain.product.entity.CardRequest;
+import com.sungshincard.backend.domain.product.repository.CardCategoryRepository;
 import com.sungshincard.backend.domain.product.repository.CardRequestRepository;
+import com.sungshincard.backend.domain.product.repository.CardSetRepository;
+import com.sungshincard.backend.domain.product.repository.ElementalTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,9 @@ public class CardRequestService {
 
     private final CardRequestRepository cardRequestRepository;
     private final MemberRepository memberRepository;
+    private final CardSetRepository cardSetRepository;
+    private final CardCategoryRepository cardCategoryRepository;
+    private final ElementalTypeRepository elementalTypeRepository;
 
     @Transactional
     public CardRequestDto createCardRequest(Long requesterId, CardRequestCreateDto dto) {
@@ -31,7 +37,9 @@ public class CardRequestService {
         CardRequest cardRequest = CardRequest.builder()
                 .requester(requester)
                 .gameType(CardMaster.GameType.valueOf(dto.getGameType()))
-                .setName(dto.getSetName())
+                .cardSet(dto.getCardSetId() != null ? cardSetRepository.findById(dto.getCardSetId()).orElse(null) : null)
+                .category(dto.getCategoryId() != null ? cardCategoryRepository.findById(dto.getCategoryId()).orElse(null) : null)
+                .elementalType(dto.getElementalTypeId() != null ? elementalTypeRepository.findById(dto.getElementalTypeId()).orElse(null) : null)
                 .cardName(dto.getCardName())
                 .cardNumber(dto.getCardNumber())
                 .rarity(dto.getRarity())
@@ -75,7 +83,9 @@ public class CardRequestService {
                 .id(request.getId())
                 .requester(request.getRequester())
                 .gameType(request.getGameType())
-                .setName(request.getSetName())
+                .cardSet(request.getCardSet())
+                .category(request.getCategory())
+                .elementalType(request.getElementalType())
                 .cardName(request.getCardName())
                 .cardNumber(request.getCardNumber())
                 .rarity(request.getRarity())
