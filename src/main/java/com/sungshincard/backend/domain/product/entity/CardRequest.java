@@ -30,6 +30,13 @@ public class CardRequest extends BaseTimeEntity {
     @Column(name = "game_type", nullable = false)
     private CardMaster.GameType gameType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "pokemon_card_type")
+    private CardMaster.PokemonCardType pokemonCardType;
+
+    @Column(name = "sub_type", length = 50)
+    private String subType;
+
     @Column(name = "set_name", nullable = false)
     private String setName;
 

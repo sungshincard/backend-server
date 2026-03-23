@@ -28,6 +28,13 @@ public class CardMaster extends BaseTimeEntity {
     @Column(name = "game_type", nullable = false)
     private GameType gameType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "pokemon_card_type")
+    private PokemonCardType pokemonCardType;
+
+    @Column(name = "sub_type", length = 50)
+    private String subType;
+
     @Column(name = "set_name", nullable = false)
     private String setName;
 
@@ -80,5 +87,9 @@ public class CardMaster extends BaseTimeEntity {
 
     public enum GameType {
         POKEMON, YUGIOH, ONE_PIECE, DIGIMON, ETC
+    }
+
+    public enum PokemonCardType {
+        POKEMON, ENERGY, TRAINER
     }
 }

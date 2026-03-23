@@ -15,7 +15,11 @@
             image_url as imageUrl,
             description,
             is_active as isActive,
-            pokemon_id as pokemonId
+            pokemon_id as pokemonId,
+            hp,
+            evolution_stage as evolutionStage,
+            pokemon_card_type as pokemonCardType,
+            sub_type as subType
         FROM card_master
         <where>
             is_active = true
@@ -33,6 +37,12 @@
             </if>
             <if test="rarity != null and rarity != ''">
                 AND rarity = #{rarity}
+            </if>
+            <if test="pokemonCardType != null and pokemonCardType != ''">
+                AND pokemon_card_type = #{pokemonCardType}
+            </if>
+            <if test="subType != null and subType != ''">
+                AND sub_type = #{subType}
             </if>
         </where>
     </select>

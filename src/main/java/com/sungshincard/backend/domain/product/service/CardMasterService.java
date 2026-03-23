@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +44,8 @@ public class CardMasterService {
                 .illustrator(requestDto.getIllustrator())
                 .expansionCode(requestDto.getExpansionCode())
                 .block(requestDto.getBlock())
+                .pokemonCardType(requestDto.getPokemonCardType() != null ? CardMaster.PokemonCardType.valueOf(requestDto.getPokemonCardType()) : null)
+                .subType(requestDto.getSubType())
                 .description(requestDto.getDescription())
                 .pokemon(pokemon)
                 .isActive(true)

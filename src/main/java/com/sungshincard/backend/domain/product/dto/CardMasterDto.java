@@ -28,6 +28,8 @@ public class CardMasterDto {
     private String illustrator;
     private String expansionCode;
     private String block;
+    private String pokemonCardType;
+    private String subType;
     
     public static CardMasterDto from(CardMaster cardMaster) {
         return CardMasterDto.builder()
@@ -48,6 +50,8 @@ public class CardMasterDto {
                 .illustrator(cardMaster.getIllustrator())
                 .expansionCode(cardMaster.getExpansionCode())
                 .block(cardMaster.getBlock())
+                .pokemonCardType(cardMaster.getPokemonCardType() != null ? cardMaster.getPokemonCardType().name() : null)
+                .subType(cardMaster.getSubType())
                 .build();
     }
 }

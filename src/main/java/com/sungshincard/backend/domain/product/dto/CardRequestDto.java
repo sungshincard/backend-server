@@ -32,6 +32,8 @@ public class CardRequestDto {
     private String illustrator;
     private String expansionCode;
     private String block;
+    private String pokemonCardType;
+    private String subType;
 
     public static CardRequestDto from(CardRequest cardRequest) {
         return CardRequestDto.builder()
@@ -53,6 +55,8 @@ public class CardRequestDto {
                 .illustrator(cardRequest.getIllustrator())
                 .expansionCode(cardRequest.getExpansionCode())
                 .block(cardRequest.getBlock())
+                .pokemonCardType(cardRequest.getPokemonCardType() != null ? cardRequest.getPokemonCardType().name() : null)
+                .subType(cardRequest.getSubType())
                 .build();
     }
 }

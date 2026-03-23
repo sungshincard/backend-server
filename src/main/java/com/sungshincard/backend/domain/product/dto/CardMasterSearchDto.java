@@ -11,4 +11,6 @@ public class CardMasterSearchDto {
     private String setName;
     private String cardNumber;
     private String rarity;
+    private String pokemonCardType;
+    private String subType;
 }

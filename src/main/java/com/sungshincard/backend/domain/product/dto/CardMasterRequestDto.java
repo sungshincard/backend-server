@@ -19,4 +19,6 @@ public class CardMasterRequestDto {
     private String illustrator;
     private String expansionCode;
     private String block;
+    private String pokemonCardType;
+    private String subType;
 }
