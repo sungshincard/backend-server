@@ -16,9 +16,9 @@ public class CardMasterRequestDto {
     private Long pokemonId;
     private Integer hp;
     private Long evolutionStageId;
-    private String illustrator;
-    private String expansionCode;
-    private String block;
+    private Long illustratorId;
+    private Long expansionCodeId;
+    private Long blockId;
     private Long categoryId;
     private Long elementalTypeId;
 }

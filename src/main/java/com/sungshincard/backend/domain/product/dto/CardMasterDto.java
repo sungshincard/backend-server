@@ -33,8 +33,11 @@ public class CardMasterDto {
     private Integer hp;
     private Long evolutionStageId;
     private String evolutionStage;
+    private Long illustratorId;
     private String illustrator;
+    private Long expansionCodeId;
     private String expansionCode;
+    private Long blockId;
     private String block;
     
     public static CardMasterDto from(CardMaster cardMaster) {
@@ -61,9 +64,12 @@ public class CardMasterDto {
                 .categoryName(cardMaster.getCategory() != null ? cardMaster.getCategory().getDisplayName() : null)
                 .elementalTypeId(cardMaster.getElementalType() != null ? cardMaster.getElementalType().getId() : null)
                 .elementalTypeName(cardMaster.getElementalType() != null ? cardMaster.getElementalType().getDisplayName() : null)
-                .illustrator(cardMaster.getIllustrator())
-                .expansionCode(cardMaster.getExpansionCode())
-                .block(cardMaster.getBlock())
+                .illustratorId(cardMaster.getIllustrator() != null ? cardMaster.getIllustrator().getId() : null)
+                .illustrator(cardMaster.getIllustrator() != null ? cardMaster.getIllustrator().getName() : null)
+                .expansionCodeId(cardMaster.getExpansionCode() != null ? cardMaster.getExpansionCode().getId() : null)
+                .expansionCode(cardMaster.getExpansionCode() != null ? cardMaster.getExpansionCode().getName() : null)
+                .blockId(cardMaster.getBlock() != null ? cardMaster.getBlock().getId() : null)
+                .block(cardMaster.getBlock() != null ? cardMaster.getBlock().getName() : null)
                 .build();
     }
 }

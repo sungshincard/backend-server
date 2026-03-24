@@ -23,6 +23,9 @@ public class CardMasterService {
     private final ElementalTypeRepository elementalTypeRepository;
     private final CardRarityRepository cardRarityRepository;
     private final EvolutionStageRepository evolutionStageRepository;
+    private final CardBlockRepository cardBlockRepository;
+    private final IllustratorRepository illustratorRepository;
+    private final CardExpansionCodeRepository cardExpansionCodeRepository;
     private final CardMasterMapper cardMasterMapper;
 
     @Transactional
@@ -46,9 +49,9 @@ public class CardMasterService {
                 .manufacturer(requestDto.getManufacturer())
                 .imageUrl(requestDto.getImageUrl())
                 .hp(requestDto.getHp())
-                .illustrator(requestDto.getIllustrator())
-                .expansionCode(requestDto.getExpansionCode())
-                .block(requestDto.getBlock())
+                .illustrator(requestDto.getIllustratorId() != null ? illustratorRepository.findById(requestDto.getIllustratorId()).orElse(null) : null)
+                .expansionCode(requestDto.getExpansionCodeId() != null ? cardExpansionCodeRepository.findById(requestDto.getExpansionCodeId()).orElse(null) : null)
+                .block(requestDto.getBlockId() != null ? cardBlockRepository.findById(requestDto.getBlockId()).orElse(null) : null)
                 .description(requestDto.getDescription())
                 .pokemon(pokemon)
                 .isActive(true)

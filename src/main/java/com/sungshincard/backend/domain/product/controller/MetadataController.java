@@ -24,6 +24,9 @@ public class MetadataController {
     private final ElementalTypeRepository elementalTypeRepository;
     private final CardRarityRepository cardRarityRepository;
     private final EvolutionStageRepository evolutionStageRepository;
+    private final CardBlockRepository cardBlockRepository;
+    private final IllustratorRepository illustratorRepository;
+    private final CardExpansionCodeRepository cardExpansionCodeRepository;
 
     @GetMapping("/cards")
     public ApiResponse<MetadataResponse> getCardMetadata(@RequestParam(defaultValue = "POKEMON") String gameType) {
@@ -63,6 +66,27 @@ public class MetadataController {
                                 .id(e.getId().toString())
                                 .name(e.getName())
                                 .displayName(e.getName())
+                                .build())
+                        .collect(Collectors.toList()))
+                .blocks(cardBlockRepository.findAllByGameTypeAndIsActiveTrue(type).stream()
+                        .map(b -> MetadataResponse.KeyValue.builder()
+                                .id(b.getId().toString())
+                                .name(b.getName())
+                                .displayName(b.getName())
+                                .build())
+                        .collect(Collectors.toList()))
+                .illustrators(illustratorRepository.findAll().stream()
+                        .map(i -> MetadataResponse.KeyValue.builder()
+                                .id(i.getId().toString())
+                                .name(i.getName())
+                                .displayName(i.getName())
+                                .build())
+                        .collect(Collectors.toList()))
+                .expansionCodes(cardExpansionCodeRepository.findAllByGameTypeAndIsActiveTrue(type).stream()
+                        .map(ec -> MetadataResponse.KeyValue.builder()
+                                .id(ec.getId().toString())
+                                .name(ec.getName())
+                                .displayName(ec.getName())
                                 .build())
                         .collect(Collectors.toList()))
                 .sortOptions(Arrays.asList("최신순", "인기순", "최저가순", "최근 거래순"))

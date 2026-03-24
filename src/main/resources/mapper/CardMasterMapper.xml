@@ -14,9 +14,12 @@
             cm.description,
             cm.is_active as isActive,
             cm.hp,
-            cm.illustrator,
-            cm.expansion_code as expansionCode,
-            cm.block,
+            cm.illustrator_id as illustratorId,
+            ill.name as illustrator,
+            cm.expansion_code_id as expansionCodeId,
+            ec.name as expansionCode,
+            cm.block_id as blockId,
+            blk.name as block,
             cs.id as cardSetId,
             cs.name as cardSetName,
             cc.id as categoryId,
@@ -36,6 +39,9 @@
         LEFT JOIN card_rarity cr ON cm.rarity_id = cr.id
         LEFT JOIN evolution_stage es ON cm.evolution_stage_id = es.id
         LEFT JOIN pokemon p ON cm.pokemon_id = p.id
+        LEFT JOIN illustrator ill ON cm.illustrator_id = ill.id
+        LEFT JOIN card_expansion_code ec ON cm.expansion_code_id = ec.id
+        LEFT JOIN card_block blk ON cm.block_id = blk.id
         <where>
             cm.is_active = true
             <if test="gameType != null and gameType != ''">
@@ -65,7 +71,17 @@
             <if test="pokemonId != null">
                 AND cm.pokemon_id = #{pokemonId}
             </if>
+            <if test="blockId != null">
+                AND cm.block_id = #{blockId}
+            </if>
+            <if test="expansionCodeId != null">
+                AND cm.expansion_code_id = #{expansionCodeId}
+            </if>
+            <if test="illustratorId != null">
+                AND cm.illustrator_id = #{illustratorId}
+            </if>
         </where>
+        ORDER BY cs.id DESC, cm.card_number ASC
     </select>
 
 </mapper>

@@ -66,14 +66,17 @@ public class CardMaster extends BaseTimeEntity {
   @JoinColumn(name = "evolution_stage_id")
   private EvolutionStage evolutionStage;
 
-  @Column(length = 200)
-  private String illustrator;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "illustrator_id")
+  private Illustrator illustrator;
 
-  @Column(name = "expansion_code", length = 50)
-  private String expansionCode;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "expansion_code_id")
+  private CardExpansionCode expansionCode;
 
-  @Column(length = 50)
-  private String block;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "block_id")
+  private CardBlock block;
 
   @Column(columnDefinition = "TEXT")
   private String description;

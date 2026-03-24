@@ -15,4 +15,7 @@ public class CardMasterSearchDto {
     private Long elementalTypeId;
     private String evolutionStage;
     private Long pokemonId;
+    private Long blockId;
+    private Long expansionCodeId;
+    private Long illustratorId;
 }
