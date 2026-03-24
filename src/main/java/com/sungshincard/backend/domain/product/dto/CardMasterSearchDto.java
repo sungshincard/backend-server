@@ -18,4 +18,15 @@ public class CardMasterSearchDto {
     private Long blockId;
     private Long expansionCodeId;
     private Long illustratorId;
+
+    private Integer page = 0;
+    private Integer size = 20;
+
+    public int getOffset() {
+        return (page != null ? page : 0) * (size != null ? size : 20);
+    }
+    
+    public int getLimit() {
+        return (size != null ? size : 20);
+    }
 }

@@ -82,6 +82,7 @@
             </if>
         </where>
         ORDER BY cs.id DESC, cm.card_number ASC
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
 </mapper>
