@@ -23,6 +23,7 @@ public class CardMasterDataService {
   private final CardCategoryRepository cardCategoryRepository;
   private final CardRarityRepository cardRarityRepository;
   private final EvolutionStageRepository evolutionStageRepository;
+  private final PokemonRepository pokemonRepository;
   private final RestTemplate restTemplate = new RestTemplate();
   private final com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
 
@@ -65,6 +66,7 @@ public class CardMasterDataService {
         CardCategory category = determineCategory(pokemonNode);
         ElementalType elementalType = determineElementalType(pokemonNode);
         EvolutionStage stage = getOrCreateEvolutionStage(pokemonNode, CardMaster.GameType.POKEMON);
+        Pokemon pokemon = pokemonRepository.findByName(pokemonName).orElse(null);
 
         for (JsonNode versionNode : versions) {
           String cardName = pokemonName + " " + (versionNode.has("card_name_suffix") ? versionNode.get("card_name_suffix").asText() : "");
@@ -83,6 +85,7 @@ public class CardMasterDataService {
               .cardSet(cardSet)
               .cardRarity(rarity)
               .evolutionStage(stage)
+              .pokemon(pokemon)
               .cardName(cardName.trim())
               .cardNumber(cardNumber)
               .language("ko")

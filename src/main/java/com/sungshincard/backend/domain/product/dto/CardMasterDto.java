@@ -29,6 +29,7 @@ public class CardMasterDto {
     private String description;
     private Boolean isActive;
     private Long pokemonId;
+    private String pokemonName;
     private Integer hp;
     private Long evolutionStageId;
     private String evolutionStage;
@@ -50,6 +51,7 @@ public class CardMasterDto {
                 .description(cardMaster.getDescription())
                 .isActive(cardMaster.getIsActive())
                 .pokemonId(cardMaster.getPokemon() != null ? cardMaster.getPokemon().getId() : null)
+                .pokemonName(cardMaster.getPokemon() != null ? cardMaster.getPokemon().getName() : null)
                 .hp(cardMaster.getHp())
                 .evolutionStageId(cardMaster.getEvolutionStage() != null ? cardMaster.getEvolutionStage().getId() : null)
                 .evolutionStage(cardMaster.getEvolutionStage() != null ? cardMaster.getEvolutionStage().getName() : null)

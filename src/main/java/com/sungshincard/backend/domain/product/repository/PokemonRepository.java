@@ -21,4 +21,6 @@ public interface PokemonRepository extends JpaRepository<Pokemon, Long> {
             @Param("type") String type);
 
     boolean existsByRegionIsNull();
+
+    java.util.Optional<Pokemon> findByName(String name);
 }
