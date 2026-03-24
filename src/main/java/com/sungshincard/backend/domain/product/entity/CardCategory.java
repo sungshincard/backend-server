@@ -40,4 +40,8 @@ public class CardCategory extends BaseTimeEntity {
     @Column(nullable = false)
     @Builder.Default
     private Integer sortOrder = 0;
+
+    @Column(name = "is_active", nullable = false)
+    @Builder.Default
+    private Boolean isActive = true;
 }

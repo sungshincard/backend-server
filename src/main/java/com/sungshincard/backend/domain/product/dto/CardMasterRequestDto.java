@@ -8,14 +8,14 @@ public class CardMasterRequestDto {
     private Long cardSetId;
     private String cardName;
     private String cardNumber;
-    private String rarity;
+    private Long rarityId;
     private String language;
     private String manufacturer;
     private String imageUrl;
     private String description;
     private Long pokemonId;
     private Integer hp;
-    private String evolutionStage;
+    private Long evolutionStageId;
     private String illustrator;
     private String expansionCode;
     private String block;

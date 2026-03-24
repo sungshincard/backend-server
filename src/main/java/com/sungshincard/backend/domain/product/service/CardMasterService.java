@@ -5,12 +5,7 @@ import com.sungshincard.backend.domain.product.dto.CardMasterRequestDto;
 import com.sungshincard.backend.domain.product.dto.CardMasterSearchDto;
 import com.sungshincard.backend.domain.product.entity.CardMaster;
 import com.sungshincard.backend.domain.product.entity.Pokemon;
-import com.sungshincard.backend.domain.product.repository.CardCategoryRepository;
-import com.sungshincard.backend.domain.product.repository.CardMasterMapper;
-import com.sungshincard.backend.domain.product.repository.CardMasterRepository;
-import com.sungshincard.backend.domain.product.repository.CardSetRepository;
-import com.sungshincard.backend.domain.product.repository.ElementalTypeRepository;
-import com.sungshincard.backend.domain.product.repository.PokemonRepository;
+import com.sungshincard.backend.domain.product.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +21,8 @@ public class CardMasterService {
     private final CardSetRepository cardSetRepository;
     private final CardCategoryRepository cardCategoryRepository;
     private final ElementalTypeRepository elementalTypeRepository;
+    private final CardRarityRepository cardRarityRepository;
+    private final EvolutionStageRepository evolutionStageRepository;
     private final CardMasterMapper cardMasterMapper;
 
     @Transactional
@@ -41,14 +38,14 @@ public class CardMasterService {
                 .cardSet(requestDto.getCardSetId() != null ? cardSetRepository.findById(requestDto.getCardSetId()).orElse(null) : null)
                 .category(requestDto.getCategoryId() != null ? cardCategoryRepository.findById(requestDto.getCategoryId()).orElse(null) : null)
                 .elementalType(requestDto.getElementalTypeId() != null ? elementalTypeRepository.findById(requestDto.getElementalTypeId()).orElse(null) : null)
+                .cardRarity(requestDto.getRarityId() != null ? cardRarityRepository.findById(requestDto.getRarityId()).orElse(null) : null)
+                .evolutionStage(requestDto.getEvolutionStageId() != null ? evolutionStageRepository.findById(requestDto.getEvolutionStageId()).orElse(null) : null)
                 .cardName(requestDto.getCardName())
                 .cardNumber(requestDto.getCardNumber())
-                .rarity(requestDto.getRarity())
                 .language(requestDto.getLanguage())
                 .manufacturer(requestDto.getManufacturer())
                 .imageUrl(requestDto.getImageUrl())
                 .hp(requestDto.getHp())
-                .evolutionStage(requestDto.getEvolutionStage())
                 .illustrator(requestDto.getIllustrator())
                 .expansionCode(requestDto.getExpansionCode())
                 .block(requestDto.getBlock())

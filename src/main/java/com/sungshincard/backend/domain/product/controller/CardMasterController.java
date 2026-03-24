@@ -19,6 +19,7 @@ public class CardMasterController {
   private final CardMasterService cardMasterService;
 
   @PostMapping
+  @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<CardMasterDto>> createCardMaster(@RequestBody CardMasterRequestDto requestDto) {
     CardMasterDto result = cardMasterService.createCardMaster(requestDto);
     return ResponseEntity.ok(ApiResponse.success(result));

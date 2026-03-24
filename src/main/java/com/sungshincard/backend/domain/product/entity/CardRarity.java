@@ -9,27 +9,27 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table(name = "elemental_type")
-public class ElementalType extends BaseTimeEntity {
+@Table(name = "card_rarity")
+public class CardRarity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String name; // e.g., FIRE, WATER
+    private String name; // e.g., C, U, R, RR, SAR
 
     @Column(name = "display_name", nullable = false)
-    private String displayName; // e.g., 불꽃, 물
+    private String displayName; // e.g., Common, Uncommon, Super Art Rare
 
-    @Column(name = "icon_url", length = 500)
-    private String iconUrl;
+    @Column(name = "color_code", length = 20)
+    private String colorCode; // Hex color for UI badges
 
     @Enumerated(EnumType.STRING)
     @Column(name = "game_type", nullable = false)
     private CardMaster.GameType gameType;
 
-    @Column(name = "is_active", nullable = false)
+    @Column(nullable = false)
     @Builder.Default
     private Boolean isActive = true;
 }

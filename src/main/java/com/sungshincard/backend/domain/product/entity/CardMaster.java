@@ -15,83 +15,86 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "card_master", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_card_master_composite", columnNames = {"game_type", "set_name", "card_number", "language"})
+    @UniqueConstraint(name = "uk_card_master_composite", columnNames = { "game_type", "card_set_id", "card_number",
+        "language" })
 })
 @EntityListeners(AuditingEntityListener.class)
 public class CardMaster extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "game_type", nullable = false)
-    private GameType gameType;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "game_type", nullable = false)
+  private GameType gameType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private CardCategory category;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "category_id")
+  private CardCategory category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "elemental_type_id")
-    private ElementalType elementalType;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "elemental_type_id")
+  private ElementalType elementalType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "card_set_id")
-    private CardSet cardSet;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "card_set_id")
+  private CardSet cardSet;
 
-    @Column(name = "card_name", nullable = false)
-    private String cardName;
+  @Column(name = "card_name", nullable = false)
+  private String cardName;
 
-    @Column(name = "card_number", nullable = false, length = 100)
-    private String cardNumber;
+  @Column(name = "card_number", nullable = false, length = 100)
+  private String cardNumber;
 
-    @Column(length = 100)
-    private String rarity;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "rarity_id")
+  private CardRarity cardRarity;
 
-    @Column(length = 50)
-    private String language;
+  @Column(length = 50)
+  private String language;
 
-    @Column(length = 100)
-    private String manufacturer;
+  @Column(length = 100)
+  private String manufacturer;
 
-    @Column(name = "image_url", length = 500)
-    private String imageUrl;
+  @Column(name = "image_url", length = 500)
+  private String imageUrl;
 
-    private Integer hp;
+  private Integer hp;
 
-    @Column(name = "evolution_stage", length = 100)
-    private String evolutionStage;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "evolution_stage_id")
+  private EvolutionStage evolutionStage;
 
-    @Column(length = 200)
-    private String illustrator;
+  @Column(length = 200)
+  private String illustrator;
 
-    @Column(name = "expansion_code", length = 50)
-    private String expansionCode;
+  @Column(name = "expansion_code", length = 50)
+  private String expansionCode;
 
-    @Column(length = 50)
-    private String block;
+  @Column(length = 50)
+  private String block;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+  @Column(columnDefinition = "TEXT")
+  private String description;
 
-    @Column(name = "is_active", nullable = false)
-    @Builder.Default
-    private Boolean isActive = true;
+  @Column(name = "is_active", nullable = false)
+  @Builder.Default
+  private Boolean isActive = true;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by")
-    private Member createdBy;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "created_by")
+  private Member createdBy;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pokemon_id")
-    private Pokemon pokemon;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "pokemon_id")
+  private Pokemon pokemon;
 
-    public enum GameType {
-        POKEMON, YUGIOH, ONE_PIECE, DIGIMON, ETC
-    }
+  public enum GameType {
+    POKEMON, YUGIOH, ONE_PIECE, DIGIMON, ETC
+  }
 
-    public enum PokemonCardType {
-        POKEMON, ENERGY, TRAINER
-    }
+  public enum PokemonCardType {
+    POKEMON, ENERGY, TRAINER
+  }
 }

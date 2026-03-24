@@ -4,9 +4,7 @@ import com.sungshincard.backend.common.dto.ApiResponse;
 import com.sungshincard.backend.domain.product.dto.MetadataResponse;
 import com.sungshincard.backend.domain.product.entity.CardMaster;
 import com.sungshincard.backend.domain.product.entity.SaleCard;
-import com.sungshincard.backend.domain.product.repository.CardCategoryRepository;
-import com.sungshincard.backend.domain.product.repository.CardSetRepository;
-import com.sungshincard.backend.domain.product.repository.ElementalTypeRepository;
+import com.sungshincard.backend.domain.product.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,33 +22,47 @@ public class MetadataController {
     private final CardSetRepository cardSetRepository;
     private final CardCategoryRepository cardCategoryRepository;
     private final ElementalTypeRepository elementalTypeRepository;
+    private final CardRarityRepository cardRarityRepository;
+    private final EvolutionStageRepository evolutionStageRepository;
 
     @GetMapping("/cards")
     public ApiResponse<MetadataResponse> getCardMetadata(@RequestParam(defaultValue = "POKEMON") String gameType) {
         CardMaster.GameType type = CardMaster.GameType.valueOf(gameType);
 
         MetadataResponse response = MetadataResponse.builder()
-                .categories(cardCategoryRepository.findAll().stream()
-                        .filter(c -> c.getGameType() == type)
+                .categories(cardCategoryRepository.findAllByGameTypeAndIsActiveTrue(type).stream()
                         .map(c -> MetadataResponse.KeyValue.builder()
                                 .id(c.getId().toString())
                                 .name(c.getName())
                                 .displayName(c.getDisplayName())
                                 .build())
                         .collect(Collectors.toList()))
-                .elementalTypes(elementalTypeRepository.findByGameType(type).stream()
+                .elementalTypes(elementalTypeRepository.findAllByGameTypeAndIsActiveTrue(type).stream()
                         .map(t -> MetadataResponse.KeyValue.builder()
                                 .id(t.getId().toString())
                                 .name(t.getName())
                                 .displayName(t.getDisplayName())
                                 .build())
                         .collect(Collectors.toList()))
-                .cardSets(cardSetRepository.findAll().stream()
-                        .filter(s -> s.getGameType() == type)
+                .cardSets(cardSetRepository.findAllByGameTypeAndIsActiveTrue(type).stream()
                         .map(s -> MetadataResponse.KeyValue.builder()
                                 .id(s.getId().toString())
                                 .name(s.getName())
                                 .displayName(s.getName())
+                                .build())
+                        .collect(Collectors.toList()))
+                .rarities(cardRarityRepository.findAllByGameTypeAndIsActiveTrue(type).stream()
+                        .map(r -> MetadataResponse.KeyValue.builder()
+                                .id(r.getId().toString())
+                                .name(r.getName())
+                                .displayName(r.getDisplayName())
+                                .build())
+                        .collect(Collectors.toList()))
+                .evolutionStages(evolutionStageRepository.findAllByGameTypeOrderBySortOrderAsc(type).stream()
+                        .map(e -> MetadataResponse.KeyValue.builder()
+                                .id(e.getId().toString())
+                                .name(e.getName())
+                                .displayName(e.getName())
                                 .build())
                         .collect(Collectors.toList()))
                 .sortOptions(Arrays.asList("최신순", "인기순", "최저가순", "최근 거래순"))

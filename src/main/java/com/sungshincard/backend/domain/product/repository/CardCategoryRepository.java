@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface CardCategoryRepository extends JpaRepository<CardCategory, Long> {
     List<CardCategory> findByParentIsNullAndGameType(CardMaster.GameType gameType);
     Optional<CardCategory> findByNameAndGameType(String name, CardMaster.GameType gameType);
+    List<CardCategory> findAllByGameTypeAndIsActiveTrue(CardMaster.GameType gameType);
 }

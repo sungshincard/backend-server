@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface ElementalTypeRepository extends JpaRepository<ElementalType, Long> {
     List<ElementalType> findByGameType(CardMaster.GameType gameType);
     Optional<ElementalType> findByNameAndGameType(String name, CardMaster.GameType gameType);
+    List<ElementalType> findAllByGameTypeAndIsActiveTrue(CardMaster.GameType gameType);
 }
