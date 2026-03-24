@@ -112,9 +112,10 @@
     - [o] 게임별 필터
     - [o] MyBatis 기반 동적 검색 구현
 - [o] 카드 필터용 메타데이터 API 구현
-    - [o] `MetadataResponse` DTO 구현
-    - [o] `MetadataController` 구현 (`GET /api/metadata/cards`)
-    - [o] 포켓몬 속성, 진화 단계 등 공통 데이터 정의
+- [o] **[New] 백엔드 페이지네이션(Pageable) 적용**
+    - [o] `PokemonRepository` 및 `PokemonService` 페이징 처리
+    - [o] `CardMasterMapper` 및 `CardMasterService` 페이징 처리 (Limit/Offset)
+    - [o] API 응답 구조 최적화 (페이징 메타데이터 포함)
 
 - [o] 카드 추가 요청 기능 구현 (레어도 및 포켓몬 특화 필드 확장 포함)
     - [o] `CardRequest` 엔티티 구현
@@ -144,6 +145,11 @@
     - [ ] 감정 여부 입력 (PSA, BGS, CGC, 미감정)
     - [ ] 카드 설명 입력
     - [ ] 앞면/뒷면/하자부위 이미지 구조 반영
+
+### [Phase 3-A] 관리자 전용 인프라 (Unblocking)
+- [o] **관리자 카드 도감 등록 기능 구현**
+    - [o] `CardMaster` 등록 API 보안 강화 (ADMIN 권한)
+    - [o] 관리자용 카드 등록/수정 API 통합
 
 ### 카드 상세 페이지
 - [ ] 카드 상세 페이지 조회 API 구현
@@ -405,9 +411,10 @@
 - [o] 카드 도감 기능 구현 완료
 - [o] 카드 추가 요청 기능 구현 완료
 - [o] PokéAPI 연동 데이터 초기화 및 지역/타입 필터링 기능 구현 완료
+- [o] 백엔드 페이지네이션(Pageable/MyBatis) 적용 완료
 - [ ] 출품 기능 미구현
 - [ ] 카드 상세 페이지 미구현
 - [ ] 주문/결제/배송/정산 기능 미구현
 - [ ] 후기/문의/상점 기능 미구현
 - [ ] 관리자 기능 미구현
-- [ ] 프론트 연동 완료 (도감/검색/인증 등 주요 부분)
+- [o] 프론트 연동 완료 (도감/검색/인증 및 관리자 기본 기능)

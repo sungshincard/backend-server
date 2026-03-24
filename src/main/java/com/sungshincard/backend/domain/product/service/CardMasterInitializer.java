@@ -6,14 +6,14 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
-@Order(2)
 @RequiredArgsConstructor
-public class PokemonInitializer implements CommandLineRunner {
+@Order(3) // Ensure this runs after DataInitializer(if order applies) to guarantee categories are present
+public class CardMasterInitializer implements CommandLineRunner {
 
-    private final PokemonDataService pokemonDataService;
+    private final CardMasterDataService cardMasterDataService;
 
     @Override
     public void run(String... args) throws Exception {
-        pokemonDataService.initializePokemonData();
+        cardMasterDataService.initializeCardData();
     }
 }

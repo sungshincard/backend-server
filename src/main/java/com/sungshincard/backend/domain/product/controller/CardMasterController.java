@@ -16,23 +16,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CardMasterController {
 
-    private final CardMasterService cardMasterService;
+  private final CardMasterService cardMasterService;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<CardMasterDto>> createCardMaster(@RequestBody CardMasterRequestDto requestDto) {
-        CardMasterDto result = cardMasterService.createCardMaster(requestDto);
-        return ResponseEntity.ok(ApiResponse.success(result));
-    }
+  @PostMapping
+  @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<ApiResponse<CardMasterDto>> createCardMaster(@RequestBody CardMasterRequestDto requestDto) {
+    CardMasterDto result = cardMasterService.createCardMaster(requestDto);
+    return ResponseEntity.ok(ApiResponse.success(result));
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<CardMasterDto>> getCardMaster(@PathVariable Long id) {
-        CardMasterDto result = cardMasterService.getCardMaster(id);
-        return ResponseEntity.ok(ApiResponse.success(result));
-    }
+  @GetMapping("/{id}")
+  public ResponseEntity<ApiResponse<CardMasterDto>> getCardMaster(@PathVariable Long id) {
+    CardMasterDto result = cardMasterService.getCardMaster(id);
+    return ResponseEntity.ok(ApiResponse.success(result));
+  }
 
-    @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<CardMasterDto>>> searchCardMasters(@ModelAttribute CardMasterSearchDto searchDto) {
-        List<CardMasterDto> result = cardMasterService.searchCardMasters(searchDto);
-        return ResponseEntity.ok(ApiResponse.success(result));
-    }
+  @GetMapping("/search")
+  public ResponseEntity<ApiResponse<List<CardMasterDto>>> searchCardMasters(
+      @ModelAttribute CardMasterSearchDto searchDto) {
+    List<CardMasterDto> result = cardMasterService.searchCardMasters(searchDto);
+    return ResponseEntity.ok(ApiResponse.success(result));
+  }
 }

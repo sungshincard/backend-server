@@ -48,13 +48,15 @@ public class CardRequest extends BaseTimeEntity {
     @Column(name = "card_number", length = 100)
     private String cardNumber;
 
-    @Column(length = 100)
-    private String rarity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_rarity_id")
+    private CardRarity cardRarity;
 
     private Integer hp;
 
-    @Column(name = "evolution_stage", length = 100)
-    private String evolutionStage;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "evolution_stage_id")
+    private EvolutionStage evolutionStage;
 
     @Column(length = 200)
     private String illustrator;

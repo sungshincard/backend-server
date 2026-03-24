@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CardMasterRepository extends JpaRepository<CardMaster, Long> {
     List<CardMaster> findByPokemonId(Long pokemonId);
+    List<CardMaster> findByCardSetId(Long cardSetId);
 }

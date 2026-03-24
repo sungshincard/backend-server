@@ -7,10 +7,7 @@ import com.sungshincard.backend.domain.product.dto.CardRequestDto;
 import com.sungshincard.backend.domain.product.dto.CardRequestStatusDto;
 import com.sungshincard.backend.domain.product.entity.CardMaster;
 import com.sungshincard.backend.domain.product.entity.CardRequest;
-import com.sungshincard.backend.domain.product.repository.CardCategoryRepository;
-import com.sungshincard.backend.domain.product.repository.CardRequestRepository;
-import com.sungshincard.backend.domain.product.repository.CardSetRepository;
-import com.sungshincard.backend.domain.product.repository.ElementalTypeRepository;
+import com.sungshincard.backend.domain.product.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +25,8 @@ public class CardRequestService {
     private final CardSetRepository cardSetRepository;
     private final CardCategoryRepository cardCategoryRepository;
     private final ElementalTypeRepository elementalTypeRepository;
+    private final CardRarityRepository cardRarityRepository;
+    private final EvolutionStageRepository evolutionStageRepository;
 
     @Transactional
     public CardRequestDto createCardRequest(Long requesterId, CardRequestCreateDto dto) {
@@ -40,11 +39,11 @@ public class CardRequestService {
                 .cardSet(dto.getCardSetId() != null ? cardSetRepository.findById(dto.getCardSetId()).orElse(null) : null)
                 .category(dto.getCategoryId() != null ? cardCategoryRepository.findById(dto.getCategoryId()).orElse(null) : null)
                 .elementalType(dto.getElementalTypeId() != null ? elementalTypeRepository.findById(dto.getElementalTypeId()).orElse(null) : null)
+                .cardRarity(dto.getRarityId() != null ? cardRarityRepository.findById(dto.getRarityId()).orElse(null) : null)
+                .evolutionStage(dto.getEvolutionStageId() != null ? evolutionStageRepository.findById(dto.getEvolutionStageId()).orElse(null) : null)
                 .cardName(dto.getCardName())
                 .cardNumber(dto.getCardNumber())
-                .rarity(dto.getRarity())
                 .hp(dto.getHp())
-                .evolutionStage(dto.getEvolutionStage())
                 .illustrator(dto.getIllustrator())
                 .expansionCode(dto.getExpansionCode())
                 .block(dto.getBlock())
@@ -86,11 +85,11 @@ public class CardRequestService {
                 .cardSet(request.getCardSet())
                 .category(request.getCategory())
                 .elementalType(request.getElementalType())
+                .cardRarity(request.getCardRarity())
+                .evolutionStage(request.getEvolutionStage())
                 .cardName(request.getCardName())
                 .cardNumber(request.getCardNumber())
-                .rarity(request.getRarity())
                 .hp(request.getHp())
-                .evolutionStage(request.getEvolutionStage())
                 .illustrator(request.getIllustrator())
                 .expansionCode(request.getExpansionCode())
                 .block(request.getBlock())

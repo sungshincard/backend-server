@@ -9,27 +9,21 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table(name = "elemental_type")
-public class ElementalType extends BaseTimeEntity {
+@Table(name = "evolution_stage")
+public class EvolutionStage extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String name; // e.g., FIRE, WATER
+    private String name; // e.g., Basic, Stage 1, Stage 2, EX, VSTAR
 
-    @Column(name = "display_name", nullable = false)
-    private String displayName; // e.g., 불꽃, 물
-
-    @Column(name = "icon_url", length = 500)
-    private String iconUrl;
+    @Column(name = "sort_order", nullable = false)
+    @Builder.Default
+    private Integer sortOrder = 0;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "game_type", nullable = false)
     private CardMaster.GameType gameType;
-
-    @Column(name = "is_active", nullable = false)
-    @Builder.Default
-    private Boolean isActive = true;
 }

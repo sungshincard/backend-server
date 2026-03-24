@@ -21,6 +21,7 @@ public class CardMasterDto {
     private String cardSetName;
     private String cardName;
     private String cardNumber;
+    private Long rarityId;
     private String rarity;
     private String language;
     private String manufacturer;
@@ -28,10 +29,15 @@ public class CardMasterDto {
     private String description;
     private Boolean isActive;
     private Long pokemonId;
+    private String pokemonName;
     private Integer hp;
+    private Long evolutionStageId;
     private String evolutionStage;
+    private Long illustratorId;
     private String illustrator;
+    private Long expansionCodeId;
     private String expansionCode;
+    private Long blockId;
     private String block;
     
     public static CardMasterDto from(CardMaster cardMaster) {
@@ -40,21 +46,30 @@ public class CardMasterDto {
                 .gameType(cardMaster.getGameType().name())
                 .cardName(cardMaster.getCardName())
                 .cardNumber(cardMaster.getCardNumber())
-                .rarity(cardMaster.getRarity())
+                .rarityId(cardMaster.getCardRarity() != null ? cardMaster.getCardRarity().getId() : null)
+                .rarity(cardMaster.getCardRarity() != null ? cardMaster.getCardRarity().getDisplayName() : null)
                 .language(cardMaster.getLanguage())
                 .manufacturer(cardMaster.getManufacturer())
                 .imageUrl(cardMaster.getImageUrl())
                 .description(cardMaster.getDescription())
                 .isActive(cardMaster.getIsActive())
                 .pokemonId(cardMaster.getPokemon() != null ? cardMaster.getPokemon().getId() : null)
+                .pokemonName(cardMaster.getPokemon() != null ? cardMaster.getPokemon().getName() : null)
                 .hp(cardMaster.getHp())
-                .evolutionStage(cardMaster.getEvolutionStage())
+                .evolutionStageId(cardMaster.getEvolutionStage() != null ? cardMaster.getEvolutionStage().getId() : null)
+                .evolutionStage(cardMaster.getEvolutionStage() != null ? cardMaster.getEvolutionStage().getName() : null)
                 .cardSetId(cardMaster.getCardSet() != null ? cardMaster.getCardSet().getId() : null)
                 .cardSetName(cardMaster.getCardSet() != null ? cardMaster.getCardSet().getName() : null)
                 .categoryId(cardMaster.getCategory() != null ? cardMaster.getCategory().getId() : null)
                 .categoryName(cardMaster.getCategory() != null ? cardMaster.getCategory().getDisplayName() : null)
                 .elementalTypeId(cardMaster.getElementalType() != null ? cardMaster.getElementalType().getId() : null)
                 .elementalTypeName(cardMaster.getElementalType() != null ? cardMaster.getElementalType().getDisplayName() : null)
+                .illustratorId(cardMaster.getIllustrator() != null ? cardMaster.getIllustrator().getId() : null)
+                .illustrator(cardMaster.getIllustrator() != null ? cardMaster.getIllustrator().getName() : null)
+                .expansionCodeId(cardMaster.getExpansionCode() != null ? cardMaster.getExpansionCode().getId() : null)
+                .expansionCode(cardMaster.getExpansionCode() != null ? cardMaster.getExpansionCode().getName() : null)
+                .blockId(cardMaster.getBlock() != null ? cardMaster.getBlock().getId() : null)
+                .block(cardMaster.getBlock() != null ? cardMaster.getBlock().getName() : null)
                 .build();
     }
 }

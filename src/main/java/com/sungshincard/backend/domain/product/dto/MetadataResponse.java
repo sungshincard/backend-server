@@ -15,6 +15,11 @@ public class MetadataResponse {
     private List<KeyValue> categories;
     private List<KeyValue> elementalTypes;
     private List<KeyValue> cardSets;
+    private List<KeyValue> rarities;
+    private List<KeyValue> evolutionStages;
+    private List<KeyValue> blocks;
+    private List<KeyValue> illustrators;
+    private List<KeyValue> expansionCodes;
     private List<String> sortOptions;
     private List<String> conditionGrades;
     private List<String> gradingCompanies;

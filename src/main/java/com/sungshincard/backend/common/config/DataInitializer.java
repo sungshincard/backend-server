@@ -7,10 +7,12 @@ import com.sungshincard.backend.domain.product.repository.CardCategoryRepository
 import com.sungshincard.backend.domain.product.repository.ElementalTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Order(1)
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 

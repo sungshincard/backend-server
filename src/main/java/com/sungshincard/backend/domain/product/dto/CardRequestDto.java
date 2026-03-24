@@ -30,8 +30,10 @@ public class CardRequestDto {
     private Long reviewedById;
     private LocalDateTime reviewedAt;
     private String rejectReason;
+    private Long rarityId;
     private String rarity;
     private Integer hp;
+    private Long evolutionStageId;
     private String evolutionStage;
     private String illustrator;
     private String expansionCode;
@@ -59,9 +61,11 @@ public class CardRequestDto {
                 .reviewedById(cardRequest.getReviewedBy() != null ? cardRequest.getReviewedBy().getId() : null)
                 .reviewedAt(cardRequest.getReviewedAt())
                 .rejectReason(cardRequest.getRejectReason())
-                .rarity(cardRequest.getRarity())
+                .rarityId(cardRequest.getCardRarity() != null ? cardRequest.getCardRarity().getId() : null)
+                .rarity(cardRequest.getCardRarity() != null ? cardRequest.getCardRarity().getDisplayName() : null)
                 .hp(cardRequest.getHp())
-                .evolutionStage(cardRequest.getEvolutionStage())
+                .evolutionStageId(cardRequest.getEvolutionStage() != null ? cardRequest.getEvolutionStage().getId() : null)
+                .evolutionStage(cardRequest.getEvolutionStage() != null ? cardRequest.getEvolutionStage().getName() : null)
                 .illustrator(cardRequest.getIllustrator())
                 .expansionCode(cardRequest.getExpansionCode())
                 .block(cardRequest.getBlock())
