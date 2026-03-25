@@ -189,21 +189,28 @@
     - [o] **에스크로 정산 로직 반영** (상품가, 수수료, 배송비 분리 및 정산 상태 관리)
     - [o] 주문 생성 API (`POST /api/v1/orders`) 및 DTO 고도화
     - [o] 주문 상세 조회 API (`GET /api/v1/orders/{id}`) 및 전용 DTO 구현
-    - [ ] 거래 방식 반영 (`DELIVERY`, `FACE_TO_FACE`)
-    - [ ] 주문 상태 관리 (`PAYMENT_PENDING`, `PAID`, `WAITING_FOR_SELLER`, `SHIPPED`, `DELIVERED`, `PURCHASE_CONFIRMED`, `COMPLETED`, `CANCELED`, `DISPUTED`)
-- [ ] **[New] 구매 동시성 제어 적용 (동일 상품 다중 구매 시도 방어 방안: DB Lock 등)**
+    - [x] ~~거래 방식 반영 (DELIVERY, FACE_TO_FACE)~~ (*Phase 4로 이관*)
+    - [x] ~~주문 상태 관리 (PAYMENT_PENDING, PAID, WAITING_FOR_SELLER, ...)~~ (*Phase 4로 이관*)
+- [x] ~~**[New] 구매 동시성 제어 적용 (동일 상품 다중 구매 시도 방어 방안: DB Lock 등)**~~ (*Phase 4로 이관*)
 
-### 결제(Payment)
-- [ ] 결제 기능 구현
+### [Phase 4] (주문 / 결제 / 배송) 인프라 구축
+
+### [Phase 4-A] 결제(Payment) 인프라 구축
+- [ ] 거래 방식 및 주문 상태 엔진 구축 (Phase 3-E 이관분)
+    - [ ] 거래 방식 반영 (`DELIVERY`, `FACE_TO_FACE`) 필드 활용 로직 구현
+    - [ ] 주문 상태 전이 가드 및 관리 로직 (`PAYMENT_PENDING` -> `PAID` 등)
+- [ ] 결제 도메인 핵심 구현
     - [ ] `Payment` 엔티티 구현
-    - [ ] 결제 요청 처리
-    - [ ] 결제 성공 처리
-    - [ ] 결제 실패 처리
-    - [ ] 결제 취소/환불 처리
-    - [ ] 에스크로 보관 로직 반영
+    - [ ] 결제 요청/성공/실패 처리 API 고도화
+    - [ ] 결제 취소/환불 처리 및 에스크로 보관 로직 반영
     - [ ] **[New] PG사(포트원 등) 연동을 위한 모의 결제 환경 구축**
+- [ ] **[New] 결제 시큐리티 및 안정성 인프라 추가**
+    - [ ] **[New] 서버 사이드 결제 금액 사후 검증 로직 구현 (PortOne API 연동)**
+    - [ ] **[New] 포트원 웹훅(Webhook) 수신 및 상태 동기화 처리**
+    - [ ] **[New] 구매 동시성 제어 (Redis/DB Lock 등을 활용한 다중 주문 방지)**
+    - [ ] **[New] 결제 전용 주문 만료 스케줄러 (미결제 주문 자동 취소)**
 
-### 배송(Shipment)
+### [Phase 4-B] 배송(Shipment)
 - [ ] 배송 기능 구현
     - [ ] `Shipment` 엔티티 구현
     - [ ] 판매자 → 구매자 배송 처리
