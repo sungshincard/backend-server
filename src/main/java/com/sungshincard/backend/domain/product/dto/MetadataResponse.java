@@ -22,7 +22,6 @@ public class MetadataResponse {
     private List<KeyValue> expansionCodes;
     private List<String> sortOptions;
     private List<String> conditionGrades;
-    private List<String> gradingCompanies;
 
     @Getter
     @Builder

@@ -39,16 +39,6 @@ public class SaleCard extends BaseTimeEntity {
     @Column(name = "condition_grade", nullable = false)
     private ConditionGrade conditionGrade;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "grading_company", nullable = false)
-    private GradingCompany gradingCompany;
-
-    @Column(name = "grading_score", length = 20)
-    private String gradingScore;
-
-    @Column(name = "certification_no", length = 100)
-    private String certificationNo;
-
     @Column(nullable = false)
     private Long price;
 
@@ -69,9 +59,6 @@ public class SaleCard extends BaseTimeEntity {
         S, A, B, C, D
     }
 
-    public enum GradingCompany {
-        NONE, PSA, BGS, CGC
-    }
 
     public enum Status {
         ACTIVE, RESERVED, SOLD, HIDDEN, DELETED
