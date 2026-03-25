@@ -6,10 +6,9 @@ import com.sungshincard.backend.domain.product.dto.CardMasterRequestDto;
 import com.sungshincard.backend.domain.product.dto.CardMasterSearchDto;
 import com.sungshincard.backend.domain.product.service.CardMasterService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/card-masters")
@@ -26,15 +25,25 @@ public class CardMasterController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<CardMasterDto>> getCardMaster(@PathVariable Long id) {
-    CardMasterDto result = cardMasterService.getCardMaster(id);
+  public ResponseEntity<ApiResponse<CardMasterDto>> getCardMaster(
+      @PathVariable Long id,
+      @org.springframework.security.core.annotation.AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails) {
+    
+    String email = userDetails != null ? userDetails.getUsername() : null;
+    CardMasterDto result = cardMasterService.getCardMaster(id, email);
     return ResponseEntity.ok(ApiResponse.success(result));
   }
 
   @GetMapping("/search")
-  public ResponseEntity<ApiResponse<List<CardMasterDto>>> searchCardMasters(
+  public ResponseEntity<ApiResponse<Page<CardMasterDto>>> searchCardMasters(
       @ModelAttribute CardMasterSearchDto searchDto) {
-    List<CardMasterDto> result = cardMasterService.searchCardMasters(searchDto);
+    Page<CardMasterDto> result = cardMasterService.searchCardMasters(searchDto);
+    return ResponseEntity.ok(ApiResponse.success(result));
+  }
+
+  @GetMapping("/recent")
+  public ResponseEntity<ApiResponse<java.util.List<CardMasterDto>>> getRecentCardMasters() {
+    java.util.List<CardMasterDto> result = cardMasterService.getRecentCardMasters();
     return ResponseEntity.ok(ApiResponse.success(result));
   }
 }

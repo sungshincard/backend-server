@@ -9,4 +9,7 @@ import java.util.List;
 @Mapper
 public interface CardMasterMapper {
     List<CardMasterDto> searchCardMasters(CardMasterSearchDto searchDto);
+    List<CardMasterDto> findRecentCardMasters(int limit);
+    CardMasterDto getCardMasterDetail(Long id);
+    long countCardMasters(CardMasterSearchDto searchDto);
 }

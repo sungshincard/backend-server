@@ -1,5 +1,6 @@
 package com.sungshincard.backend.domain.product.service;
 
+import com.sungshincard.backend.domain.member.service.MemberService;
 import com.sungshincard.backend.domain.product.dto.CardMasterDto;
 import com.sungshincard.backend.domain.product.dto.CardMasterRequestDto;
 import com.sungshincard.backend.domain.product.dto.CardMasterSearchDto;
@@ -7,6 +8,9 @@ import com.sungshincard.backend.domain.product.entity.CardMaster;
 import com.sungshincard.backend.domain.product.entity.Pokemon;
 import com.sungshincard.backend.domain.product.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +31,9 @@ public class CardMasterService {
     private final IllustratorRepository illustratorRepository;
     private final CardExpansionCodeRepository cardExpansionCodeRepository;
     private final CardMasterMapper cardMasterMapper;
+    private final WatchlistService watchlistService;
+    private final MemberService memberService;
+    private final com.sungshincard.backend.domain.order.repository.OrdersRepository ordersRepository;
 
     @Transactional
     public CardMasterDto createCardMaster(CardMasterRequestDto requestDto) {
@@ -58,18 +65,51 @@ public class CardMasterService {
                 .build();
 
         CardMaster saved = cardMasterRepository.save(cardMaster);
-        return CardMasterDto.from(saved);
+        return CardMasterDto.from(saved, null, null, null, null, null, null, null);
     }
 
     @Transactional(readOnly = true)
-    public CardMasterDto getCardMaster(Long id) {
-        CardMaster cardMaster = cardMasterRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("CardMaster not found"));
-        return CardMasterDto.from(cardMaster);
+    public CardMasterDto getCardMaster(Long id, String userEmail) {
+        CardMasterDto result = cardMasterMapper.getCardMasterDetail(id);
+        if (result == null) {
+            throw new IllegalArgumentException("CardMaster not found");
+        }
+        
+        result.setFavoriteCount(watchlistService.getWatchCount(id));
+        if (userEmail != null) {
+            try {
+                com.sungshincard.backend.domain.member.entity.Member member = memberService.findByEmail(userEmail);
+                result.setIsWatched(watchlistService.isWatched(member, id));
+            } catch (Exception e) {
+                // Ignore if member not found
+            }
+        }
+        
+        java.util.List<com.sungshincard.backend.domain.order.entity.Orders.OrderStatus> tradeStatuses = java.util.Arrays.asList(
+                com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.PAID,
+                com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.SHIPPED,
+                com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.DELIVERED,
+                com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.PURCHASE_CONFIRMED
+        );
+        
+        Long recentTradePrice = ordersRepository.findTopBySaleCard_CardMaster_IdAndStatusInOrderByCreatedAtDesc(id, tradeStatuses)
+                .map(com.sungshincard.backend.domain.order.entity.Orders::getItemPrice)
+                .orElse(null);
+        
+        result.setRecentTradePrice(recentTradePrice);
+        
+        return result;
     }
 
     @Transactional(readOnly = true)
-    public List<CardMasterDto> searchCardMasters(CardMasterSearchDto searchDto) {
-        return cardMasterMapper.searchCardMasters(searchDto);
+    public Page<CardMasterDto> searchCardMasters(CardMasterSearchDto searchDto) {
+        List<CardMasterDto> content = cardMasterMapper.searchCardMasters(searchDto);
+        long total = cardMasterMapper.countCardMasters(searchDto);
+        return new PageImpl<>(content, PageRequest.of(searchDto.getPage(), searchDto.getSize()), total);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CardMasterDto> getRecentCardMasters() {
+        return cardMasterMapper.findRecentCardMasters(8);
     }
 }

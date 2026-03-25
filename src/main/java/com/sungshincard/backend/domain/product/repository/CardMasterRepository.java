@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface CardMasterRepository extends JpaRepository<CardMaster, Long> {
+    List<CardMaster> findTop8ByIsActiveOrderByCreatedAtDesc(boolean isActive);
     List<CardMaster> findByPokemonId(Long pokemonId);
     List<CardMaster> findByCardSetId(Long cardSetId);
 }

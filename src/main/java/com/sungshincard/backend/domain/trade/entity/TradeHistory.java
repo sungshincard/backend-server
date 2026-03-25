@@ -45,13 +45,6 @@ public class TradeHistory {
     @Column(name = "condition_grade", nullable = false)
     private SaleCard.ConditionGrade conditionGrade;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "grading_company", nullable = false)
-    private SaleCard.GradingCompany gradingCompany;
-
-    @Column(name = "grading_score", length = 20)
-    private String gradingScore;
-
     @Column(name = "sold_price", nullable = false)
     private Long soldPrice;
 

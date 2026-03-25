@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "price_history", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"card_master_id", "condition_grade", "grading_company", "price_date"})
+    @UniqueConstraint(columnNames = {"card_master_id", "condition_grade", "price_date"})
 })
 @EntityListeners(AuditingEntityListener.class)
 public class PriceHistory extends BaseTimeEntity {
@@ -32,10 +32,6 @@ public class PriceHistory extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "condition_grade", nullable = false)
     private ConditionGrade conditionGrade;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "grading_company", nullable = false)
-    private GradingCompany gradingCompany;
 
     @Column(name = "price_date", nullable = false)
     private LocalDate priceDate;
@@ -57,7 +53,4 @@ public class PriceHistory extends BaseTimeEntity {
         ALL, S, A, B, C, D
     }
 
-    public enum GradingCompany {
-        ALL, NONE, PSA, BGS, CGC
-    }
 }

@@ -93,9 +93,6 @@ public class MetadataController {
                 .conditionGrades(Arrays.stream(SaleCard.ConditionGrade.values())
                         .map(Enum::name)
                         .collect(Collectors.toList()))
-                .gradingCompanies(Arrays.stream(SaleCard.GradingCompany.values())
-                        .map(Enum::name)
-                        .collect(Collectors.toList()))
                 .build();
 
         return ApiResponse.success(response);
