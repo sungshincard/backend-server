@@ -1,14 +1,10 @@
 package com.sungshincard.backend.domain.order.entity;
 
 import com.sungshincard.backend.common.entity.BaseTimeEntity;
-
 import com.sungshincard.backend.domain.member.entity.Member;
 import com.sungshincard.backend.domain.product.entity.SaleCard;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -16,16 +12,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "orders")
-@EntityListeners(AuditingEntityListener.class)
 public class Orders extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sale_card_id", nullable = false, unique = true)
-    private SaleCard saleCard;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_member_id", nullable = false)
@@ -35,55 +26,109 @@ public class Orders extends BaseTimeEntity {
     @JoinColumn(name = "seller_member_id", nullable = false)
     private Member seller;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "trade_type", nullable = false)
-    private TradeType tradeType;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sale_card_id", nullable = false)
+    private SaleCard saleCard;
 
-    @Column(name = "order_price", nullable = false)
-    private Long orderPrice;
+    @Column(nullable = false)
+    private Long itemPrice; // 순수 상품 가액
 
-    @Column(name = "shipping_fee", nullable = false)
-    @Builder.Default
-    private Long shippingFee = 0L;
+    @Column(nullable = false)
+    private Long totalPrice; // 결제 총액 (itemPrice + shippingFee + serviceFee)
 
-    @Column(name = "fee_amount", nullable = false)
-    @Builder.Default
-    private Long feeAmount = 0L;
+    @Column(nullable = false)
+    private Long shippingFee;
 
-    @Column(name = "payment_amount", nullable = false)
-    private Long paymentAmount;
+    @Column(nullable = false)
+    private Long serviceFee;
+
+    @Column(nullable = false)
+    private Long settlementAmount; // 정산 예정액 (itemPrice + shippingFee)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private Status status = Status.PAYMENT_PENDING;
+    private SettlementStatus settlementStatus = SettlementStatus.WAITING;
 
-    @Column(name = "ordered_at", nullable = false)
-    private LocalDateTime orderedAt;
+    // --- 배송지 정보 (주문 시점 스냅샷) ---
+    @Column(nullable = false)
+    private String receiverName;
 
-    @Column(name = "shipped_at")
-    private LocalDateTime shippedAt;
+    @Column(nullable = false)
+    private String receiverPhone;
 
-    @Column(name = "delivered_at")
-    private LocalDateTime deliveredAt;
+    @Column(nullable = false)
+    private String zipCode;
 
-    @Column(name = "purchase_confirmed_at")
-    private LocalDateTime purchaseConfirmedAt;
+    @Column(nullable = false)
+    private String address;
 
-    @Column(name = "auto_confirm_at")
-    private LocalDateTime autoConfirmAt;
+    @Column(nullable = false)
+    private String detailAddress;
 
-    @Column(name = "completed_at")
-    private LocalDateTime completedAt;
+    @Column
+    private String shippingMessage;
 
-    @Column(name = "canceled_at")
-    private LocalDateTime canceledAt;
+    // --- 결제 정보 ---
+    @Column
+    private String paymentKey; // PG사 승인 번호
+
+    @Column
+    private String paymentMethod; // CARD, TRANSFER 등
+
+    @Column
+    private java.time.LocalDateTime paidAt;
+
+    // --- 배송 추적 정보 ---
+    @Column
+    private String carrier; // 택배사
+
+    @Column
+    private String trackingNumber; // 송장 번호
+
+    @Column
+    private java.time.LocalDateTime shippedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private OrderStatus status = OrderStatus.PENDING;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TradeType tradeType;
+
+    public enum OrderStatus {
+        PENDING, PAID, SHIPPED, DELIVERED, PURCHASE_CONFIRMED, CANCELLED, DISPUTED
+    }
 
     public enum TradeType {
         DELIVERY, FACE_TO_FACE
     }
 
-    public enum Status {
-        PAYMENT_PENDING, PAID, WAITING_FOR_SELLER, SHIPPED, DELIVERED, PURCHASE_CONFIRMED, COMPLETED, CANCELED, DISPUTED, REFUNDED
+    public enum SettlementStatus {
+        WAITING, COMPLETED, HELD, CANCELLED
+    }
+
+    public void updateStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public void updateSettlementStatus(SettlementStatus status) {
+        this.settlementStatus = status;
+    }
+
+    public void updateTracking(String carrier, String trackingNumber) {
+        this.carrier = carrier;
+        this.trackingNumber = trackingNumber;
+        this.shippedAt = java.time.LocalDateTime.now();
+        this.status = OrderStatus.SHIPPED;
+    }
+
+    public void updatePaymentInfo(String paymentKey, String paymentMethod) {
+        this.paymentKey = paymentKey;
+        this.paymentMethod = paymentMethod;
+        this.paidAt = java.time.LocalDateTime.now();
+        this.status = OrderStatus.PAID;
     }
 }

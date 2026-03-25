@@ -1,5 +1,6 @@
 package com.sungshincard.backend.domain.product.service;
 
+import com.sungshincard.backend.domain.member.service.MemberService;
 import com.sungshincard.backend.domain.product.dto.CardMasterDto;
 import com.sungshincard.backend.domain.product.dto.CardMasterRequestDto;
 import com.sungshincard.backend.domain.product.dto.CardMasterSearchDto;
@@ -30,6 +31,8 @@ public class CardMasterService {
     private final IllustratorRepository illustratorRepository;
     private final CardExpansionCodeRepository cardExpansionCodeRepository;
     private final CardMasterMapper cardMasterMapper;
+    private final WatchlistService watchlistService;
+    private final MemberService memberService;
 
     @Transactional
     public CardMasterDto createCardMaster(CardMasterRequestDto requestDto) {
@@ -65,10 +68,22 @@ public class CardMasterService {
     }
 
     @Transactional(readOnly = true)
-    public CardMasterDto getCardMaster(Long id) {
+    public CardMasterDto getCardMaster(Long id, String userEmail) {
         CardMaster cardMaster = cardMasterRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("CardMaster not found"));
-        return CardMasterDto.from(cardMaster);
+        
+        Integer favoriteCount = watchlistService.getWatchCount(id);
+        Boolean isWatched = false;
+        if (userEmail != null) {
+            try {
+                com.sungshincard.backend.domain.member.entity.Member member = memberService.findByEmail(userEmail);
+                isWatched = watchlistService.isWatched(member, id);
+            } catch (Exception e) {
+                // Ignore if member not found
+            }
+        }
+        
+        return CardMasterDto.from(cardMaster, favoriteCount, isWatched);
     }
 
     @Transactional(readOnly = true)

@@ -39,8 +39,10 @@ public class CardMasterDto {
     private String expansionCode;
     private Long blockId;
     private String block;
+    private Integer favoriteCount;
+    private Boolean isWatched;
     
-    public static CardMasterDto from(CardMaster cardMaster) {
+    public static CardMasterDto from(CardMaster cardMaster, Integer favoriteCount, Boolean isWatched) {
         return CardMasterDto.builder()
                 .id(cardMaster.getId())
                 .gameType(cardMaster.getGameType().name())
@@ -70,6 +72,12 @@ public class CardMasterDto {
                 .expansionCode(cardMaster.getExpansionCode() != null ? cardMaster.getExpansionCode().getName() : null)
                 .blockId(cardMaster.getBlock() != null ? cardMaster.getBlock().getId() : null)
                 .block(cardMaster.getBlock() != null ? cardMaster.getBlock().getName() : null)
+                .favoriteCount(favoriteCount)
+                .isWatched(isWatched)
                 .build();
+    }
+    
+    public static CardMasterDto from(CardMaster cardMaster) {
+        return from(cardMaster, null, null);
     }
 }

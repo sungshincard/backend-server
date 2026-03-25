@@ -8,6 +8,8 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -47,6 +49,10 @@ public class SaleCard extends BaseTimeEntity {
     @Builder.Default
     private Status status = Status.ACTIVE;
 
+    @OneToMany(mappedBy = "saleCard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<SaleCardImage> images = new ArrayList<>();
+
     @Column(name = "view_count", nullable = false)
     @Builder.Default
     private Integer viewCount = 0;
@@ -62,5 +68,15 @@ public class SaleCard extends BaseTimeEntity {
 
     public enum Status {
         ACTIVE, RESERVED, SOLD, HIDDEN, DELETED
+    }
+
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
+
+    public void update(String title, String description, Long price) {
+        this.title = title;
+        this.description = description;
+        this.price = price;
     }
 }

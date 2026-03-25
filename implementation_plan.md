@@ -175,8 +175,8 @@
 - **Pokemon**: 포켓몬 메타 데이터 (도감번호, 이름, 속성, 지방 등) 및 CardMaster 연동
 - **CardMaster**: 카드 도감 정보
 - **CardRequest**: 회원의 카드 추가 요청
-- **Listing**: 회원이 등록한 실물 카드 출품 정보
-- **ListingImage**: 출품 카드 이미지
+- **SaleCard**: 회원이 등록한 실물 카드 출품 정보
+- **SaleCardImage**: 출품 카드 이미지 (정면, 후면, 하자 부위 등 다중 이미지 지원)
 
 ### 6.3 주문/거래
 - **Order**: 구매 주문
@@ -232,13 +232,19 @@
 - [o] [NEW] 포켓몬 카드 메타데이터 확장 및 다중 조건 검색 구현
 - [o] [NEW] PokéAPI 연동 한국어 데이터 초기화 및 동기화 구현
 
-### Phase 3. 주문/결제/배송 프로세스 구축
-- Order 도메인 설계
-- Payment / Settlement 도메인 설계
-- Shipment 설계
-- 판매자 발송 / 송장 등록 / 구매 확정 프로세스 구현
-- 자동 구매 확정 로직 구현
-- 정산 홀드 / 정산 완료 로직 구현
+### Phase 3. 상품 출품 및 이미지 인프라 구축
+- [o] **Phase 3-A**: Admin 대시보드 구조 및 레이아웃 (완료)
+- [o] **Phase 3-B**: 관리자 카드 마스터 등록 기능 (완료)
+- [/] **Phase 3-C**: 이미지 업로드 인프라 및 다중 이미지 관리
+    - `SaleCardImage` 엔티티 및 SaleCard 연관 관계 매핑
+    - 로컬 파일 스토리지 서비스 구현 (`FileService`)
+    - 이미지 업로드 API (`MultipartFile` 처리) 및 보안 설정
+    - 업로드된 정적 이미지 서빙 설정 (Resource Handler)
+- [ ] **Phase 3-D**: 사용자 카드 출품(SaleCard) 비즈니스 로직
+    - SaleCard 생성/수정/조회 API
+    - 출품 상태 및 가격 수정 로직
+- [ ] **Phase 3-E**: 주문/결제/배송 기초 설계
+    - Order/Payment 도메인 설계 및 주문 프로세스 구현
 
 ### Phase 4. 시세/이력/관심 기능 구축
 - TradeHistory 조회

@@ -25,8 +25,12 @@ public class CardMasterController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<CardMasterDto>> getCardMaster(@PathVariable Long id) {
-    CardMasterDto result = cardMasterService.getCardMaster(id);
+  public ResponseEntity<ApiResponse<CardMasterDto>> getCardMaster(
+      @PathVariable Long id,
+      @org.springframework.security.core.annotation.AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails) {
+    
+    String email = userDetails != null ? userDetails.getUsername() : null;
+    CardMasterDto result = cardMasterService.getCardMaster(id, email);
     return ResponseEntity.ok(ApiResponse.success(result));
   }
 
