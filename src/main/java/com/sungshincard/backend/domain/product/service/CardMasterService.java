@@ -7,6 +7,9 @@ import com.sungshincard.backend.domain.product.entity.CardMaster;
 import com.sungshincard.backend.domain.product.entity.Pokemon;
 import com.sungshincard.backend.domain.product.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,7 +72,9 @@ public class CardMasterService {
     }
 
     @Transactional(readOnly = true)
-    public List<CardMasterDto> searchCardMasters(CardMasterSearchDto searchDto) {
-        return cardMasterMapper.searchCardMasters(searchDto);
+    public Page<CardMasterDto> searchCardMasters(CardMasterSearchDto searchDto) {
+        List<CardMasterDto> content = cardMasterMapper.searchCardMasters(searchDto);
+        long total = cardMasterMapper.countCardMasters(searchDto);
+        return new PageImpl<>(content, PageRequest.of(searchDto.getPage(), searchDto.getSize()), total);
     }
 }

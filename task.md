@@ -112,6 +112,10 @@
     - [o] 게임별 필터
     - [o] MyBatis 기반 동적 검색 구현
 - [o] 카드 필터용 메타데이터 API 구현
+- [o] **[New] 카드 카테고리 분류 오류 수정 (TRAINER vs TRAINERS)**
+    - [o] `CardMasterDataService.java` 매핑 문자열 정합성 확보
+    - [o] `subtypes` 활용한 상세 카테고리(ITEM, SUPPORT 등) 분류 강화
+    - [ ] 기존 잘못 분류된 데이터 보정 및 재초기화 방안 마련
 - [o] **[New] 백엔드 페이지네이션(Pageable) 적용**
     - [o] `PokemonRepository` 및 `PokemonService` 페이징 처리
     - [o] `CardMasterMapper` 및 `CardMasterService` 페이징 처리 (Limit/Offset)

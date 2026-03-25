@@ -9,4 +9,5 @@ import java.util.List;
 @Mapper
 public interface CardMasterMapper {
     List<CardMasterDto> searchCardMasters(CardMasterSearchDto searchDto);
+    long countCardMasters(CardMasterSearchDto searchDto);
 }

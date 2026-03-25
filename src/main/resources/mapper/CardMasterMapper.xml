@@ -60,7 +60,7 @@
                 AND cr.display_name = #{rarity}
             </if>
             <if test="categoryId != null">
-                AND cm.category_id = #{categoryId}
+                AND (cm.category_id = #{categoryId} OR cc.parent_id = #{categoryId})
             </if>
             <if test="elementalTypeId != null">
                 AND cm.elemental_type_id = #{elementalTypeId}
@@ -83,6 +83,59 @@
         </where>
         ORDER BY cs.id DESC, cm.card_number ASC
         LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countCardMasters" resultType="long">
+        SELECT COUNT(*)
+        FROM card_master cm
+        LEFT JOIN card_set cs ON cm.card_set_id = cs.id
+        LEFT JOIN card_category cc ON cm.category_id = cc.id
+        LEFT JOIN elemental_type et ON cm.elemental_type_id = et.id
+        LEFT JOIN card_rarity cr ON cm.rarity_id = cr.id
+        LEFT JOIN evolution_stage es ON cm.evolution_stage_id = es.id
+        LEFT JOIN pokemon p ON cm.pokemon_id = p.id
+        LEFT JOIN illustrator ill ON cm.illustrator_id = ill.id
+        LEFT JOIN card_expansion_code ec ON cm.expansion_code_id = ec.id
+        LEFT JOIN card_block blk ON cm.block_id = blk.id
+        <where>
+            cm.is_active = true
+            <if test="gameType != null and gameType != ''">
+                AND cm.game_type = #{gameType}
+            </if>
+            <if test="cardName != null and cardName != ''">
+                AND cm.card_name LIKE CONCAT('%', #{cardName}, '%')
+            </if>
+            <if test="cardSetId != null">
+                AND cm.card_set_id = #{cardSetId}
+            </if>
+            <if test="cardNumber != null and cardNumber != ''">
+                AND cm.card_number = #{cardNumber}
+            </if>
+            <if test="rarity != null and rarity != ''">
+                AND cr.display_name = #{rarity}
+            </if>
+            <if test="categoryId != null">
+                AND (cm.category_id = #{categoryId} OR cc.parent_id = #{categoryId})
+            </if>
+            <if test="elementalTypeId != null">
+                AND cm.elemental_type_id = #{elementalTypeId}
+            </if>
+            <if test="evolutionStage != null and evolutionStage != ''">
+                AND es.name = #{evolutionStage}
+            </if>
+            <if test="pokemonId != null">
+                AND cm.pokemon_id = #{pokemonId}
+            </if>
+            <if test="blockId != null">
+                AND cm.block_id = #{blockId}
+            </if>
+            <if test="expansionCodeId != null">
+                AND cm.expansion_code_id = #{expansionCodeId}
+            </if>
+            <if test="illustratorId != null">
+                AND cm.illustrator_id = #{illustratorId}
+            </if>
+        </where>
     </select>
 
 </mapper>

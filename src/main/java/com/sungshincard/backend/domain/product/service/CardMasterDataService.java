@@ -309,10 +309,35 @@ public class CardMasterDataService {
     String supertype = pokemonNode.has("supertype") ? pokemonNode.get("supertype").asText() : "포켓몬";
     String categoryName = "POKEMON"; // Default
 
-    if ("에너지".equals(supertype))
+    if ("에너지".equals(supertype)) {
       categoryName = "ENERGY";
-    else if ("트레이너스".equals(supertype))
-      categoryName = "TRAINERS";
+
+      // Check for more specific subtypes for Energy (Basic, Special)
+      if (pokemonNode.has("subtypes") && pokemonNode.get("subtypes").isArray()
+          && pokemonNode.get("subtypes").size() > 0) {
+        String subtype = pokemonNode.get("subtypes").get(0).asText();
+        categoryName = switch (subtype) {
+          case "기본 에너지" -> "BASIC_ENERGY";
+          case "특수 에너지" -> "SPECIAL_ENERGY";
+          default -> "ENERGY";
+        };
+      }
+    } else if ("트레이너스".equals(supertype)) {
+      categoryName = "TRAINER";
+
+      // Check for more specific subtypes for Trainers (Item, Support, Stadium, Tool)
+      if (pokemonNode.has("subtypes") && pokemonNode.get("subtypes").isArray()
+          && pokemonNode.get("subtypes").size() > 0) {
+        String subtype = pokemonNode.get("subtypes").get(0).asText();
+        categoryName = switch (subtype) {
+          case "아이템" -> "ITEM";
+          case "서포트" -> "SUPPORT";
+          case "스타디움" -> "STADIUM";
+          case "포켓몬 도구" -> "TOOL";
+          default -> "TRAINER";
+        };
+      }
+    }
 
     String finalCategoryName = categoryName;
     return cardCategoryRepository.findByNameAndGameType(finalCategoryName, CardMaster.GameType.POKEMON)
