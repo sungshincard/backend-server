@@ -124,4 +124,12 @@ public class SaleCardService {
         // JPA Dirty Checking
         // saleCard.updateStatus(status); // Entity에 메서드 추가 필요
     }
+
+    @Transactional(readOnly = true)
+    public List<SaleCardResponseDto> getRecentSaleCards() {
+        return saleCardRepository.findTop8ByStatusOrderByCreatedAtDesc(SaleCard.Status.ACTIVE)
+                .stream()
+                .map(SaleCardResponseDto::from)
+                .collect(Collectors.toList());
+    }
 }

@@ -4,9 +4,11 @@ import com.sungshincard.backend.domain.product.entity.CardMaster;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,8 +43,13 @@ public class CardMasterDto {
     private String block;
     private Integer favoriteCount;
     private Boolean isWatched;
+    private Long lowestPrice;
+    private Long highestPrice;
+    private Double averagePrice;
+    private Long recentTradePrice;
+    private Integer activeListingCount;
     
-    public static CardMasterDto from(CardMaster cardMaster, Integer favoriteCount, Boolean isWatched) {
+    public static CardMasterDto from(CardMaster cardMaster, Integer favoriteCount, Boolean isWatched, Long lowestPrice, Long highestPrice, Double averagePrice, Long recentTradePrice, Integer activeListingCount) {
         return CardMasterDto.builder()
                 .id(cardMaster.getId())
                 .gameType(cardMaster.getGameType().name())
@@ -74,10 +81,15 @@ public class CardMasterDto {
                 .block(cardMaster.getBlock() != null ? cardMaster.getBlock().getName() : null)
                 .favoriteCount(favoriteCount)
                 .isWatched(isWatched)
+                .lowestPrice(lowestPrice)
+                .highestPrice(highestPrice)
+                .averagePrice(averagePrice)
+                .recentTradePrice(recentTradePrice)
+                .activeListingCount(activeListingCount)
                 .build();
     }
     
     public static CardMasterDto from(CardMaster cardMaster) {
-        return from(cardMaster, null, null);
+        return from(cardMaster, null, null, null, null, null, null, null);
     }
 }

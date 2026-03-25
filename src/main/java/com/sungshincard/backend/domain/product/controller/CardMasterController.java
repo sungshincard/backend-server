@@ -40,4 +40,10 @@ public class CardMasterController {
     Page<CardMasterDto> result = cardMasterService.searchCardMasters(searchDto);
     return ResponseEntity.ok(ApiResponse.success(result));
   }
+
+  @GetMapping("/recent")
+  public ResponseEntity<ApiResponse<java.util.List<CardMasterDto>>> getRecentCardMasters() {
+    java.util.List<CardMasterDto> result = cardMasterService.getRecentCardMasters();
+    return ResponseEntity.ok(ApiResponse.success(result));
+  }
 }

@@ -33,6 +33,7 @@ public class CardMasterService {
     private final CardMasterMapper cardMasterMapper;
     private final WatchlistService watchlistService;
     private final MemberService memberService;
+    private final com.sungshincard.backend.domain.order.repository.OrdersRepository ordersRepository;
 
     @Transactional
     public CardMasterDto createCardMaster(CardMasterRequestDto requestDto) {
@@ -64,26 +65,40 @@ public class CardMasterService {
                 .build();
 
         CardMaster saved = cardMasterRepository.save(cardMaster);
-        return CardMasterDto.from(saved);
+        return CardMasterDto.from(saved, null, null, null, null, null, null, null);
     }
 
     @Transactional(readOnly = true)
     public CardMasterDto getCardMaster(Long id, String userEmail) {
-        CardMaster cardMaster = cardMasterRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("CardMaster not found"));
+        CardMasterDto result = cardMasterMapper.getCardMasterDetail(id);
+        if (result == null) {
+            throw new IllegalArgumentException("CardMaster not found");
+        }
         
-        Integer favoriteCount = watchlistService.getWatchCount(id);
-        Boolean isWatched = false;
+        result.setFavoriteCount(watchlistService.getWatchCount(id));
         if (userEmail != null) {
             try {
                 com.sungshincard.backend.domain.member.entity.Member member = memberService.findByEmail(userEmail);
-                isWatched = watchlistService.isWatched(member, id);
+                result.setIsWatched(watchlistService.isWatched(member, id));
             } catch (Exception e) {
                 // Ignore if member not found
             }
         }
         
-        return CardMasterDto.from(cardMaster, favoriteCount, isWatched);
+        java.util.List<com.sungshincard.backend.domain.order.entity.Orders.OrderStatus> tradeStatuses = java.util.Arrays.asList(
+                com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.PAID,
+                com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.SHIPPED,
+                com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.DELIVERED,
+                com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.PURCHASE_CONFIRMED
+        );
+        
+        Long recentTradePrice = ordersRepository.findTopBySaleCard_CardMaster_IdAndStatusInOrderByCreatedAtDesc(id, tradeStatuses)
+                .map(com.sungshincard.backend.domain.order.entity.Orders::getItemPrice)
+                .orElse(null);
+        
+        result.setRecentTradePrice(recentTradePrice);
+        
+        return result;
     }
 
     @Transactional(readOnly = true)
@@ -91,5 +106,10 @@ public class CardMasterService {
         List<CardMasterDto> content = cardMasterMapper.searchCardMasters(searchDto);
         long total = cardMasterMapper.countCardMasters(searchDto);
         return new PageImpl<>(content, PageRequest.of(searchDto.getPage(), searchDto.getSize()), total);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CardMasterDto> getRecentCardMasters() {
+        return cardMasterMapper.findRecentCardMasters(8);
     }
 }

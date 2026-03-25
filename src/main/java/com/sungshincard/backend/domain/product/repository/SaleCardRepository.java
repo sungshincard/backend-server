@@ -16,6 +16,8 @@ public interface SaleCardRepository extends JpaRepository<SaleCard, Long> {
     List<SaleCard> findAllByCardMasterIdAndStatusAndConditionGradeOrderByPriceAsc(
             Long cardMasterId, SaleCard.Status status, SaleCard.ConditionGrade conditionGrade);
     
+    List<SaleCard> findTop8ByStatusOrderByCreatedAtDesc(SaleCard.Status status);
+    
     @Query("SELECT s FROM SaleCard s JOIN FETCH s.cardMaster JOIN FETCH s.seller WHERE s.id = :id")
     SaleCard findByIdWithDetails(@Param("id") Long id);
 }
