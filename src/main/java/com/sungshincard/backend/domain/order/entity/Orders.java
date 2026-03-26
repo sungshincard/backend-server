@@ -18,6 +18,9 @@ public class Orders extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "toss_order_id")
+    private String tossOrderId; // 토스 결제용 고유 주문 ID
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_member_id", nullable = false)
     private Member buyer;
@@ -26,7 +29,7 @@ public class Orders extends BaseTimeEntity {
     @JoinColumn(name = "seller_member_id", nullable = false)
     private Member seller;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_card_id", nullable = false)
     private SaleCard saleCard;
 
@@ -130,5 +133,9 @@ public class Orders extends BaseTimeEntity {
         this.paymentMethod = paymentMethod;
         this.paidAt = java.time.LocalDateTime.now();
         this.status = OrderStatus.PAID;
+    }
+
+    public void updateTossOrderId(String tossOrderId) {
+        this.tossOrderId = tossOrderId;
     }
 }

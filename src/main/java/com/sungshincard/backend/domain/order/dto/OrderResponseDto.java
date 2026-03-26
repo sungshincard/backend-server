@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class OrderResponseDto {
     private Long id;
+    private String tossOrderId;
     private Long saleCardId;
     private String saleCardTitle;
     private String sellerNickname;
@@ -42,6 +43,7 @@ public class OrderResponseDto {
     public static OrderResponseDto from(Orders order) {
         return OrderResponseDto.builder()
                 .id(order.getId())
+                .tossOrderId(order.getTossOrderId())
                 .saleCardId(order.getSaleCard().getId())
                 .saleCardTitle(order.getSaleCard().getTitle())
                 .sellerNickname(order.getSeller().getNickname())

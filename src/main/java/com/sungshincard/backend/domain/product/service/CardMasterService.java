@@ -1,6 +1,7 @@
 package com.sungshincard.backend.domain.product.service;
 
 import com.sungshincard.backend.domain.member.service.MemberService;
+import com.sungshincard.backend.domain.order.entity.Orders;
 import com.sungshincard.backend.domain.product.dto.CardMasterDto;
 import com.sungshincard.backend.domain.product.dto.CardMasterRequestDto;
 import com.sungshincard.backend.domain.product.dto.CardMasterSearchDto;
@@ -85,12 +86,9 @@ public class CardMasterService {
             }
         }
         
-        java.util.List<com.sungshincard.backend.domain.order.entity.Orders.OrderStatus> tradeStatuses = java.util.Arrays.asList(
-                com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.PAID,
-                com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.SHIPPED,
-                com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.DELIVERED,
-                com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.PURCHASE_CONFIRMED
-        );
+        java.util.List<Orders.OrderStatus> tradeStatuses = java.util.Arrays.asList(
+                Orders.OrderStatus.PAID, Orders.OrderStatus.SHIPPED,
+                Orders.OrderStatus.DELIVERED, Orders.OrderStatus.PURCHASE_CONFIRMED);
         
         Long recentTradePrice = ordersRepository.findTopBySaleCard_CardMaster_IdAndStatusInOrderByCreatedAtDesc(id, tradeStatuses)
                 .map(com.sungshincard.backend.domain.order.entity.Orders::getItemPrice)

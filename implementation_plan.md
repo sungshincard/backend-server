@@ -240,14 +240,14 @@
 - [o] **Phase 3-E**: 주문/결제/배송 기초 도메인 설계 및 주문 생성 API
 
 ### Phase 4. 주문/결제/배송 인프라 구축 (**진행 예정**)
-- [ ] **Phase 4-A**: 결제(Payment) 인프라 고도화
-    - [ ] 거래 방식(Delivery/Face-to-face) 및 주문 상태 엔진 구축
-    - [ ] PortOne(포트원) 연동 및 서버사이드 결제 검증 (Verification)
-    - [ ] 포트원 웹훅(Webhook) 연동 및 실시간 상태 동기화
-- [ ] **Phase 4-B**: 배송(Shipment) 및 주문 관리
-    - [ ] Shipment 엔티티 및 송장 등록/배송 추적 API
-    - [ ] 구매 동시성 제어 (동일 상품 중복 주문 방지)
-    - [ ] 결제 만료 주문 자동 취소 스케줄러
+- [ ] **Phase 4-A**: 토스페이먼츠(Toss Payments) 에스크로 연동
+    - [ ] `application.yml` 내 Toss 클라이언트/시크릿 키 설정 및 RestTemplate 빈 등록
+    - [ ] 결제 승인 API (`POST /v1/payments/confirm`) 및 에스크로 배송정보 등록 API 연동
+    - [ ] 결제 위변조 방지를 위한 서버 사이드 금액 검증 및 상점 주문 데이터 동기화
+- [ ] **Phase 4-B**: 배송(Shipment) 및 주문 관리 안정화
+    - [ ] Shipment 엔티티 및 송장 등록 시 Toss 에스크로 배송정보 연동 (`/v1/escrow/shipping-info/{paymentKey}`)
+    - [ ] 주문 동시성 제어 (DB Lock 또는 Redis 분산 락을 통한 재고/상태 중복 방어)
+    - [ ] 미결제 주문 자동 취소 스케줄러 (Toss 가상계좌/결제대기 대응)
 
 ### Phase 5. 정산 구조 및 거래 정책 자동화
 - Settlement 엔티티 및 자동 정산 로직

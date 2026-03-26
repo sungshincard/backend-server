@@ -29,3 +29,7 @@ logging:
 jwt:
   secret: your-very-secure-random-secret-key-that-is-at-least-32-characters-long
   expiration: 86400000 # 24 hours
+
+toss:
+  client-key: "test_ck_kYG57Eba3G9JWkmzN1zErpWDOxmA"
+  secret-key: "test_sk_eqRGgYO1r5gxqDNaWP053QnN2Eya"

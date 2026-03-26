@@ -20,17 +20,27 @@ public class OrdersController {
     private final MemberService memberService;
 
     @PostMapping
-    public ApiResponse<Long> createOrder(
+    public ApiResponse<OrderResponseDto> createOrder(
             @RequestBody OrderRequestDto requestDto,
             @AuthenticationPrincipal UserDetails userDetails) {
         
         Member buyer = memberService.findByEmail(userDetails.getUsername());
-        Long orderId = ordersService.createOrder(requestDto, buyer);
-        return ApiResponse.success(orderId);
+        OrderResponseDto responseDto = ordersService.createOrder(requestDto, buyer);
+        return ApiResponse.success(responseDto);
     }
 
     @GetMapping("/{id}")
     public ApiResponse<OrderResponseDto> getOrder(@PathVariable Long id) {
-        return ApiResponse.success(OrderResponseDto.from(ordersService.getOrder(id)));
+        return ApiResponse.success(ordersService.getOrder(id));
+    }
+
+    @PutMapping("/{id}/shipping")
+    public ApiResponse<Void> updateShipping(
+            @PathVariable Long id,
+            @RequestParam String carrier,
+            @RequestParam String trackingNumber) {
+        
+        ordersService.updateShippingInfo(id, carrier, trackingNumber);
+        return ApiResponse.success(null, "배송 정보가 등록되었습니다.");
     }
 }

@@ -27,4 +27,15 @@ public class GlobalExceptionHandler {
     public ApiResponse<Void> handleIllegalArgumentException(IllegalArgumentException e) {
         return ApiResponse.error(HttpStatus.BAD_REQUEST, e.getMessage());
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ApiResponse<Void> handleIllegalStateException(IllegalStateException e) {
+        return ApiResponse.error(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ApiResponse<Void> handleDataIntegrityException(org.springframework.dao.DataIntegrityViolationException e) {
+        log.error("Data Integrity Violation: ", e);
+        return ApiResponse.error(HttpStatus.CONFLICT, "데이터 무결성 오류가 발생했습니다. (유니크 제약 조건 등을 확인해 주세요)");
+    }
 }
