@@ -41,12 +41,16 @@ public class TossPaymentController {
         
         TossPaymentResponse response = tossPaymentService.confirmPayment(request);
 
-        // 2. 주문 상태 업데이트 (PAID)
-        // 주문 ID는 "ORDER_123" 형태일 수 있으므로 파싱 필요 여부 확인
-        // 여기서는 숫자로 되어있다고 가정하거나 OrdersService에서 처리
-        ordersService.completePayment(orderId, paymentKey, response.getMethod());
-
-        return ApiResponse.success(response);
+         // 2. 주문 상태 업데이트 (PAID)
+        try {
+            ordersService.completePayment(orderId, paymentKey, response.getMethod());
+        } catch (Exception e) {
+            log.error("Failed to complete order in DB after successful Toss payment. Triggering auto-cancel for paymentKey: {}", paymentKey, e);
+            tossPaymentService.cancelPayment(paymentKey, "우리 서버 주문 처리 실패 (연동 오류)");
+            throw new RuntimeException("결제는 승인되었으나 서버 내부 오류가 발생하여 자동 취소되었습니다. 다시 시도해 주세요.");
+        }
+ 
+         return ApiResponse.success(response);
     }
 
     @GetMapping("/toss/fail")

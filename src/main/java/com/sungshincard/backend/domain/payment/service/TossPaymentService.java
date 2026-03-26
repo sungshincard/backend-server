@@ -42,6 +42,30 @@ public class TossPaymentService {
     }
 
     /**
+     * 토스 결제 취소 요청 (보상 트랜잭션용)
+     */
+    public void cancelPayment(String paymentKey, String cancelReason) {
+        HttpHeaders headers = createHeaders();
+        java.util.Map<String, String> body = new java.util.HashMap<>();
+        body.put("cancelReason", cancelReason);
+        
+        HttpEntity<java.util.Map<String, String>> entity = new HttpEntity<>(body, headers);
+
+        try {
+            restTemplate.postForObject(
+                    "https://api.tosspayments.com/v1/payments/" + paymentKey + "/cancel",
+                    entity,
+                    String.class
+            );
+            log.info("Toss Payment Cancelled for paymentKey: {}, Reason: {}", paymentKey, cancelReason);
+        } catch (Exception e) {
+            log.error("Toss Payment Cancellation Failed: {}", e.getMessage());
+            // 취소 실패 시엔 수동 처리를 위한 로그를 비중 있게 남김
+            log.error("CRITICAL: Payment cancellation failed for key {}. Manual intervention required!", paymentKey);
+        }
+    }
+
+    /**
      * 토스 에스크로 배송 정보 등록
      */
     public void registerShippingInfo(String paymentKey, TossShippingInfoRequest request) {
