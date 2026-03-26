@@ -80,7 +80,7 @@ public class CardMasterService {
         if (userEmail != null) {
             try {
                 com.sungshincard.backend.domain.member.entity.Member member = memberService.findByEmail(userEmail);
-                result.setIsWatched(watchlistService.isWatched(member, id));
+                result.setIsWatched(watchlistService.isCardWatched(member, id));
             } catch (Exception e) {
                 // Ignore if member not found
             }

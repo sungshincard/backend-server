@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "watchlist", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"member_id", "card_master_id"})
+    @UniqueConstraint(columnNames = {"member_id", "watch_type", "card_master_id", "sale_card_id"})
 })
 @EntityListeners(AuditingEntityListener.class)
 public class Watchlist extends BaseTimeEntity {
@@ -28,7 +28,20 @@ public class Watchlist extends BaseTimeEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "watch_type", nullable = false)
+    private WatchType watchType;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "card_master_id", nullable = false)
+    @JoinColumn(name = "card_master_id", nullable = true)
     private CardMaster cardMaster;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sale_card_id", nullable = true)
+    private SaleCard saleCard;
+
+    public enum WatchType {
+        CARD_MASTER, // 카드 모델 자체에 대한 알림 구독
+        SALE_CARD    // 특정 매물에 대한 찜하기
+    }
 }

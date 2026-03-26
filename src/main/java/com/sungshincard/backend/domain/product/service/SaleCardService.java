@@ -79,15 +79,16 @@ public class SaleCardService {
         return saved.getId();
     }
 
-    public SaleCardResponseDto getSaleCard(Long id) {
+    public SaleCardResponseDto getSaleCard(Long id, Member member) {
         SaleCard saleCard = saleCardRepository.findByIdWithDetails(id);
         if (saleCard == null) {
             throw new IllegalArgumentException("존재하지 않는 출품 카드입니다.");
         }
-        return SaleCardResponseDto.from(saleCard);
+        boolean isWatched = (member != null) && watchlistRepository.existsByMemberAndSaleCard(member, saleCard);
+        return SaleCardResponseDto.from(saleCard, true, isWatched);
     }
 
-    public List<SaleCardResponseDto> getSaleCardsByCardMaster(Long cardMasterId, SaleCard.ConditionGrade conditionGrade) {
+    public List<SaleCardResponseDto> getSaleCardsByCardMaster(Long cardMasterId, SaleCard.ConditionGrade conditionGrade, Member member) {
         List<SaleCard> saleCards;
         if (conditionGrade == null) {
             saleCards = saleCardRepository.findAllByCardMasterIdAndStatusOrderByPriceAsc(cardMasterId, SaleCard.Status.ACTIVE);
@@ -96,7 +97,10 @@ public class SaleCardService {
         }
         
         return saleCards.stream()
-                .map(SaleCardResponseDto::from)
+                .map(sc -> {
+                    boolean isWatched = (member != null) && watchlistRepository.existsByMemberAndSaleCard(member, sc);
+                    return SaleCardResponseDto.from(sc, true, isWatched);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -126,10 +130,13 @@ public class SaleCardService {
     }
 
     @Transactional(readOnly = true)
-    public List<SaleCardResponseDto> getRecentSaleCards() {
+    public List<SaleCardResponseDto> getRecentSaleCards(Member member) {
         return saleCardRepository.findTop8ByStatusOrderByCreatedAtDesc(SaleCard.Status.ACTIVE)
                 .stream()
-                .map(SaleCardResponseDto::from)
+                .map(sc -> {
+                    boolean isWatched = (member != null) && watchlistRepository.existsByMemberAndSaleCard(member, sc);
+                    return SaleCardResponseDto.from(sc, true, isWatched);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -137,7 +144,7 @@ public class SaleCardService {
     public List<SaleCardResponseDto> getMySaleCards(Member seller) {
         return saleCardRepository.findAllBySellerId(seller.getId())
                 .stream()
-                .map(saleCard -> SaleCardResponseDto.from(saleCard, false))
+                .map(saleCard -> SaleCardResponseDto.from(saleCard, false, false))
                 .collect(Collectors.toList());
     }
 }

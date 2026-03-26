@@ -8,8 +8,6 @@ import com.sungshincard.backend.domain.product.dto.SaleCardResponseDto;
 import com.sungshincard.backend.domain.product.entity.SaleCard;
 import com.sungshincard.backend.domain.product.service.SaleCardService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SaleCardController {
 
-    private static final Logger log = LoggerFactory.getLogger(SaleCardController.class);
     private final SaleCardService saleCardService;
     private final MemberService memberService;
 
@@ -36,15 +33,20 @@ public class SaleCardController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<SaleCardResponseDto> getSaleCard(@PathVariable Long id) {
-        return ApiResponse.success(saleCardService.getSaleCard(id));
+    public ApiResponse<SaleCardResponseDto> getSaleCard(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Member member = (userDetails != null) ? memberService.findByEmail(userDetails.getUsername()) : null;
+        return ApiResponse.success(saleCardService.getSaleCard(id, member));
     }
 
     @GetMapping("/card-master/{cardMasterId}")
     public ApiResponse<List<SaleCardResponseDto>> getSaleCardsByCardMaster(
             @PathVariable Long cardMasterId,
-            @RequestParam(required = false) SaleCard.ConditionGrade conditionGrade) {
-        return ApiResponse.success(saleCardService.getSaleCardsByCardMaster(cardMasterId, conditionGrade));
+            @RequestParam(required = false) SaleCard.ConditionGrade conditionGrade,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Member member = (userDetails != null) ? memberService.findByEmail(userDetails.getUsername()) : null;
+        return ApiResponse.success(saleCardService.getSaleCardsByCardMaster(cardMasterId, conditionGrade, member));
     }
 
     @PutMapping("/{id}")
@@ -77,10 +79,9 @@ public class SaleCardController {
     }
 
     @GetMapping("/recent")
-    public ApiResponse<List<SaleCardResponseDto>> getRecentSaleCards() {
-        for(SaleCardResponseDto dto : saleCardService.getRecentSaleCards()) {
-            log.info(dto.toString() + "!!!");
-        }
-        return ApiResponse.success(saleCardService.getRecentSaleCards());
+    public ApiResponse<List<SaleCardResponseDto>> getRecentSaleCards(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Member member = (userDetails != null) ? memberService.findByEmail(userDetails.getUsername()) : null;
+        return ApiResponse.success(saleCardService.getRecentSaleCards(member));
     }
 }

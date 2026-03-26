@@ -79,4 +79,14 @@ public class SaleCard extends BaseTimeEntity {
         this.description = description;
         this.price = price;
     }
+
+    public void incrementFavoriteCount() {
+        this.favoriteCount++;
+    }
+
+    public void decrementFavoriteCount() {
+        if (this.favoriteCount > 0) {
+            this.favoriteCount--;
+        }
+    }
 }
