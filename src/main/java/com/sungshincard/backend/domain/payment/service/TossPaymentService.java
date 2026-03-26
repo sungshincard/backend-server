@@ -21,7 +21,7 @@ import java.util.Base64;
 public class TossPaymentService {
 
     private final TossPaymentConfig tossPaymentConfig;
-    private final RestTemplate restTemplate = new RestTemplate(); // 간단하게 생성하여 사용
+    private final RestTemplate restTemplate;
 
     private static final String CONFIRM_URL = "https://api.tosspayments.com/v1/payments/confirm";
     private static final String ESCROW_SHIPPING_URL = "https://api.tosspayments.com/v1/escrow/shipping-info/";
