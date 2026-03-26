@@ -129,6 +129,17 @@ public class OrdersService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public void verifyOrderAmount(String tossOrderId, Long amount) {
+        Orders order = ordersRepository.findByTossOrderId(tossOrderId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+        
+        if (!order.getTotalPrice().equals(amount)) {
+            log.error("Payment Amount Mismatch: DB={} / Request={}", order.getTotalPrice(), amount);
+            throw new IllegalArgumentException("결제 요청 금액이 주문 금액과 일치하지 않습니다.");
+        }
+    }
+
     /**
      * 배송 정보(송장) 등록 및 에스크로 연동
      */

@@ -29,7 +29,10 @@ public class TossPaymentController {
         
         log.info("Toss Payment Success Callback: paymentKey={}, orderId={}, amount={}", paymentKey, orderId, amount);
 
-        // 1. Toss 결제 승인 요청
+        // 0. 주문 금액 검증 (DB와 일치 여부)
+        ordersService.verifyOrderAmount(orderId, amount);
+ 
+         // 1. Toss 결제 승인 요청
         TossPaymentConfirmRequest request = TossPaymentConfirmRequest.builder()
                 .paymentKey(paymentKey)
                 .orderId(orderId)
