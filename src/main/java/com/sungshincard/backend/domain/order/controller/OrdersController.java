@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -32,6 +33,20 @@ public class OrdersController {
     @GetMapping("/{id}")
     public ApiResponse<OrderResponseDto> getOrder(@PathVariable Long id) {
         return ApiResponse.success(ordersService.getOrder(id));
+    }
+
+    @GetMapping("/buy")
+    public ApiResponse<List<OrderResponseDto>> getPurchaseHistory(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Member buyer = memberService.findByEmail(userDetails.getUsername());
+        return ApiResponse.success(ordersService.getPurchaseHistory(buyer));
+    }
+
+    @GetMapping("/sell")
+    public ApiResponse<List<OrderResponseDto>> getSalesHistory(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Member seller = memberService.findByEmail(userDetails.getUsername());
+        return ApiResponse.success(ordersService.getSalesHistory(seller));
     }
 
     @PutMapping("/{id}/shipping")

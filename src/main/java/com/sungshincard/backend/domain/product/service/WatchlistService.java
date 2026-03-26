@@ -5,9 +5,12 @@ import com.sungshincard.backend.domain.product.entity.CardMaster;
 import com.sungshincard.backend.domain.product.entity.Watchlist;
 import com.sungshincard.backend.domain.product.repository.CardMasterRepository;
 import com.sungshincard.backend.domain.product.repository.WatchlistRepository;
+import com.sungshincard.backend.domain.product.dto.CardMasterDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +48,10 @@ public class WatchlistService {
         return watchlistRepository.existsByMemberAndCardMaster(member, cardMaster);
     }
 
-    public java.util.List<Watchlist> getWatchlist(Member member) {
-        return watchlistRepository.findByMember(member);
+    @Transactional(readOnly = true)
+    public List<CardMasterDto> getWatchlist(Member member) {
+        return watchlistRepository.findByMember(member).stream()
+                .map(w -> CardMasterDto.from(w.getCardMaster()))
+                .collect(Collectors.toList());
     }
 }

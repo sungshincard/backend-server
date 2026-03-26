@@ -10,16 +10,21 @@ import java.util.List;
 
 @Repository
 public interface OrdersRepository extends JpaRepository<Orders, Long> {
-    List<Orders> findAllByBuyerId(Long buyerId);
-    List<Orders> findAllBySellerId(Long sellerId);
+  List<Orders> findAllByBuyerId(Long buyerId);
 
-    java.util.Optional<Orders> findTopBySaleCard_CardMaster_IdAndStatusInOrderByCreatedAtDesc(
-            Long cardMasterId, java.util.Collection<Orders.OrderStatus> statuses);
+  List<Orders> findAllBySellerId(Long sellerId);
 
-    List<Orders> findAllByStatusAndCreatedAtBefore(Orders.OrderStatus status, java.time.LocalDateTime dateTime);
+  java.util.Optional<Orders> findTopBySaleCard_CardMaster_IdAndStatusInOrderByCreatedAtDesc(
+      Long cardMasterId, java.util.Collection<Orders.OrderStatus> statuses);
 
-    java.util.List<Orders> findAllBySaleCardAndStatus(SaleCard saleCard, Orders.OrderStatus status);
-    java.util.Optional<Orders> findBySaleCardAndBuyerAndStatus(SaleCard saleCard, Member buyer, Orders.OrderStatus status);
-    java.util.Optional<Orders> findBySaleCard(SaleCard saleCard);
-    java.util.Optional<Orders> findByTossOrderId(String tossOrderId);
+  List<Orders> findAllByStatusAndCreatedAtBefore(Orders.OrderStatus status, java.time.LocalDateTime dateTime);
+
+  java.util.List<Orders> findAllBySaleCardAndStatus(SaleCard saleCard, Orders.OrderStatus status);
+
+  java.util.Optional<Orders> findBySaleCardAndBuyerAndStatus(SaleCard saleCard, Member buyer,
+      Orders.OrderStatus status);
+
+  java.util.Optional<Orders> findBySaleCard(SaleCard saleCard);
+
+  java.util.Optional<Orders> findByTossOrderId(String tossOrderId);
 }

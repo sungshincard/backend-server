@@ -18,7 +18,8 @@ public interface WatchlistRepository extends JpaRepository<Watchlist, Long> {
     
     Integer countByCardMasterId(Long cardMasterId);
     
-    List<Watchlist> findByMember(Member member);
+    @org.springframework.data.jpa.repository.Query("SELECT w FROM Watchlist w JOIN FETCH w.cardMaster WHERE w.member = :member")
+    List<Watchlist> findByMember(@org.springframework.data.repository.query.Param("member") Member member);
     
     List<Watchlist> findAllByCardMaster(CardMaster cardMaster);
     

@@ -69,6 +69,13 @@ public class SaleCardController {
         return ApiResponse.success(null);
     }
 
+    @GetMapping("/me")
+    public ApiResponse<List<SaleCardResponseDto>> getMySaleCards(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Member member = memberService.findByEmail(userDetails.getUsername());
+        return ApiResponse.success(saleCardService.getMySaleCards(member));
+    }
+
     @GetMapping("/recent")
     public ApiResponse<List<SaleCardResponseDto>> getRecentSaleCards() {
         for(SaleCardResponseDto dto : saleCardService.getRecentSaleCards()) {

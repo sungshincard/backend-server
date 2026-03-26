@@ -14,6 +14,8 @@ import java.util.Optional;
 @Repository
 public interface SaleCardRepository extends JpaRepository<SaleCard, Long> {
     
+    List<SaleCard> findAllBySellerId(Long sellerId);
+    
     List<SaleCard> findAllByCardMasterIdAndStatusOrderByPriceAsc(Long cardMasterId, SaleCard.Status status);
 
     List<SaleCard> findAllByCardMasterIdAndStatusAndConditionGradeOrderByPriceAsc(

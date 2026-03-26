@@ -20,6 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -216,5 +219,19 @@ public class OrdersService {
                 String.format("[%s] 상품 배송이 시작되었습니다.", order.getSaleCard().getCardMaster().getCardName()),
                 "/orders/" + order.getId()
         );
+    }
+    
+    @Transactional(readOnly = true)
+    public List<OrderResponseDto> getPurchaseHistory(Member buyer) {
+        return ordersRepository.findAllByBuyerId(buyer.getId()).stream()
+                .map(OrderResponseDto::from)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderResponseDto> getSalesHistory(Member seller) {
+        return ordersRepository.findAllBySellerId(seller.getId()).stream()
+                .map(OrderResponseDto::from)
+                .collect(Collectors.toList());
     }
 }

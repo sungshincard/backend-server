@@ -132,4 +132,12 @@ public class SaleCardService {
                 .map(SaleCardResponseDto::from)
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<SaleCardResponseDto> getMySaleCards(Member seller) {
+        return saleCardRepository.findAllBySellerId(seller.getId())
+                .stream()
+                .map(SaleCardResponseDto::from)
+                .collect(Collectors.toList());
+    }
 }

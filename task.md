@@ -208,12 +208,21 @@
     - [o] 포트원(X) -> 토스페이먼츠 표준 결제 흐름으로 전면 전환
     - [o] **[New] 구매 동시성 제어 (Redis/DB Lock 등을 활용한 다중 주문 방지)**
     - [o] **[New] 결제 전용 주문 만료 스케줄러 (미결제 주문 자동 취소)**
+    - [o] **[New] 결제 멱등성(Idempotency) 검증 로직 추가**
+        - [o] `OrdersService.verifyOrderAmount`에 중복 결제(새로고침 연타 등) 방어 로직 구현 (상태가 `PENDING`일 때만 통과)
+    - [ ] **[New] 구매자 주도 '결제 취소(환불)' API 구현**
+        - [ ] `POST /api/v1/orders/{id}/cancel` API 생성
+        - [ ] 상태 검증 로직 (배송 시작(SHIPPED) 전인 PAID 상태에서만 취소 가능하도록 방어)
+        - [ ] 토스페이먼츠 '결제 취소 API' 연동 및 DB 상태 롤백(CANCELLED 처리, SaleCard 상태 ACTIVE 복구)
+    
 
 ### [Phase 4-B] 배송(Shipment)
 - [ ] 배송 기능 구현
     - [ ] `Shipment` 엔티티 구현
     - [ ] 판매자 → 구매자 배송 처리
-    - [ ] 송장번호 등록
+    - [ ] **[New] 판매자 송장번호 등록 API 컨트롤러 연결**
+        - [ ] `OrdersService`에 구현된 `updateShippingInfo`를 호출할 `POST /api/v1/orders/{id}/shipping` API 작성
+        - [ ] 프론트엔드에서 넘어온 택배사 코드(kr.cjlogistics 등)를 토스 에스크로 규격에 맞게 매핑/검증
     - [ ] 배송 상태 추적 API
     - [ ] 배송완료 상태 반영
 
@@ -225,6 +234,12 @@
 - [ ] 정산 기능 구현
     - [ ] `Settlement` 엔티티 구현
     - [ ] 구매 확정 후 판매자 정산 처리
+    - [ ] **[New] '구매 확정' 및 정산 완료 API 구현**
+        - [ ] `POST /api/v1/orders/{id}/confirm` (구매자용 구매 확정 API) 생성
+        - [ ] 호출 시 `Orders` 상태를 `PURCHASE_CONFIRMED`로 변경
+        - [ ] 호출 시 해당 주문의 `Settlement`(정산) 상태를 `READY -> COMPLETED`로 변경하여 에스크로 사이클 종료
+    - [ ] **[New] 판매자 정산 내역 조회 API 구현**
+        - [ ] `GET /api/v1/settlements/me` API 생성 (자신의 판매 대금 정산 예정액 및 완료액 조회)
     - [ ] 자동 구매 확정 후 정산 처리
     - [ ] 정산 홀드 상태 처리
     - [ ] 수수료 차감 로직 반영

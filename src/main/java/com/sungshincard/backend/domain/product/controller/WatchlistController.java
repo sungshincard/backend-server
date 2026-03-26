@@ -41,12 +41,6 @@ public class WatchlistController {
             @AuthenticationPrincipal UserDetails userDetails) {
         
         com.sungshincard.backend.domain.member.entity.Member member = memberService.findByEmail(userDetails.getUsername());
-        java.util.List<com.sungshincard.backend.domain.product.entity.Watchlist> watchlist = watchlistService.getWatchlist(member);
-        
-        java.util.List<com.sungshincard.backend.domain.product.dto.CardMasterDto> dtos = watchlist.stream()
-                .map(w -> com.sungshincard.backend.domain.product.dto.CardMasterDto.from(w.getCardMaster()))
-                .toList();
-                
-        return ApiResponse.success(dtos);
+        return ApiResponse.success(watchlistService.getWatchlist(member));
     }
 }
