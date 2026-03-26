@@ -9,6 +9,10 @@ import com.sungshincard.backend.domain.product.entity.SaleCard;
 import com.sungshincard.backend.domain.product.repository.SaleCardRepository;
 import com.sungshincard.backend.domain.notification.entity.Notification;
 import com.sungshincard.backend.domain.notification.service.NotificationService;
+import com.sungshincard.backend.domain.payment.entity.Payment;
+import com.sungshincard.backend.domain.payment.repository.PaymentRepository;
+import com.sungshincard.backend.domain.settlement.entity.Settlement;
+import com.sungshincard.backend.domain.settlement.repository.SettlementRepository;
 import com.sungshincard.backend.domain.payment.dto.TossShippingInfoRequest;
 import com.sungshincard.backend.domain.payment.service.TossPaymentService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +30,8 @@ public class OrdersService {
     private final SaleCardRepository saleCardRepository;
     private final NotificationService notificationService;
     private final TossPaymentService tossPaymentService;
+    private final PaymentRepository paymentRepository;
+    private final SettlementRepository settlementRepository;
 
     @Transactional
     public OrderResponseDto createOrder(OrderRequestDto requestDto, Member buyer) {
@@ -119,6 +125,30 @@ public class OrdersService {
 
         order.updatePaymentInfo(paymentKey, paymentMethod);
         order.getSaleCard().updateStatus(SaleCard.Status.SOLD);
+
+        // 3. Payment 레코드 생성
+        Payment payment = Payment.builder()
+                .order(order)
+                .payer(order.getBuyer())
+                .amount(order.getTotalPrice())
+                .paymentMethod(mapToPaymentMethod(paymentMethod))
+                .provider("TOSS")
+                .providerTxId(paymentKey)
+                .status(Payment.Status.PAID)
+                .paidAt(java.time.LocalDateTime.now())
+                .build();
+        paymentRepository.save(payment);
+
+        // 4. Settlement 레코드 생성
+        Settlement settlement = Settlement.builder()
+                .order(order)
+                .seller(order.getSeller())
+                .grossAmount(order.getTotalPrice())
+                .feeAmount(order.getServiceFee())
+                .netAmount(order.getSettlementAmount())
+                .status(Settlement.Status.READY)
+                .build();
+        settlementRepository.save(settlement);
         
         // 최종 결제 완료 알림 발송 (판매자)
         notificationService.send(
@@ -127,6 +157,14 @@ public class OrdersService {
                 String.format("[%s] 상품 결제가 완료되었습니다. 배송을 준비해 주세요.", order.getSaleCard().getCardMaster().getCardName()),
                 "/orders/" + order.getId()
         );
+    }
+
+    private Payment.PaymentMethod mapToPaymentMethod(String method) {
+        if (method == null) return Payment.PaymentMethod.CARD;
+        if (method.contains("카드")) return Payment.PaymentMethod.CARD;
+        if (method.contains("계좌")) return Payment.PaymentMethod.BANK_TRANSFER;
+        if (method.contains("포인트")) return Payment.PaymentMethod.POINT;
+        return Payment.PaymentMethod.CARD; // 기본값
     }
 
     @Transactional(readOnly = true)
