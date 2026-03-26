@@ -91,7 +91,7 @@ public class OrdersService {
         notificationService.send(
                 saleCard.getSeller(),
                 Notification.NotificationType.ORDER_STATUS,
-                String.format("[%s] 상품이 판매되었습니다. 결제 금액을 확인해 주세요.", saleCard.getCardMaster().getCardName()),
+                String.format("[%s] 상품이 판매되었습니다. 결제 금액을 확인해 주세요.", saleCard.getTitle()),
                 "/orders/" + savedOrder.getId()
         );
 
@@ -118,6 +118,7 @@ public class OrdersService {
         }
 
         order.updatePaymentInfo(paymentKey, paymentMethod);
+        order.getSaleCard().updateStatus(SaleCard.Status.SOLD);
         
         // 최종 결제 완료 알림 발송 (판매자)
         notificationService.send(
