@@ -36,14 +36,14 @@ public class OrdersController {
   }
 
   @GetMapping("/buy")
-  public ApiResponse<List<OrderResponseDto>> getPurchaseHistory(
+  public ApiResponse<List<OrderResponseDto.ListDto>> getPurchaseHistory(
       @AuthenticationPrincipal UserDetails userDetails) {
     Member buyer = memberService.findByEmail(userDetails.getUsername());
     return ApiResponse.success(ordersService.getPurchaseHistory(buyer));
   }
 
   @GetMapping("/sell")
-  public ApiResponse<List<OrderResponseDto>> getSalesHistory(
+  public ApiResponse<List<OrderResponseDto.ListDto>> getSalesHistory(
       @AuthenticationPrincipal UserDetails userDetails) {
     Member seller = memberService.findByEmail(userDetails.getUsername());
     return ApiResponse.success(ordersService.getSalesHistory(seller));

@@ -69,4 +69,21 @@ public class OrderResponseDto {
                 .shippedAt(order.getShippedAt())
                 .build();
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ListDto {
+        private Long id;
+        private String saleCardTitle;
+        private Long itemPrice;
+        private Long totalPrice;
+        private Orders.OrderStatus status;
+        private Orders.TradeType tradeType;
+        private String sellerNickname;
+        private String buyerNickname;
+        private String thumbnailUrl;
+        private LocalDateTime orderedAt;
+    }
 }

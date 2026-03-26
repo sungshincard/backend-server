@@ -6,6 +6,7 @@ import com.sungshincard.backend.domain.order.dto.OrderResponseDto;
 import com.sungshincard.backend.domain.order.entity.Orders;
 import com.sungshincard.backend.domain.order.repository.OrdersRepository;
 import com.sungshincard.backend.domain.product.entity.SaleCard;
+import com.sungshincard.backend.domain.product.entity.SaleCardImage;
 import com.sungshincard.backend.domain.product.repository.SaleCardRepository;
 import com.sungshincard.backend.domain.notification.entity.Notification;
 import com.sungshincard.backend.domain.notification.service.NotificationService;
@@ -223,16 +224,38 @@ public class OrdersService {
   }
 
   @Transactional(readOnly = true)
-  public List<OrderResponseDto> getPurchaseHistory(Member buyer) {
-    return ordersRepository.findAllByBuyerId(buyer.getId()).stream()
-        .map(OrderResponseDto::from)
+  public List<OrderResponseDto.ListDto> getPurchaseHistory(Member buyer) {
+    return ordersRepository.findBuyOrdersWithSaleCardAndImages(buyer.getId()).stream()
+        .map(this::toListDto)
         .collect(Collectors.toList());
   }
 
   @Transactional(readOnly = true)
-  public List<OrderResponseDto> getSalesHistory(Member seller) {
-    return ordersRepository.findAllBySellerId(seller.getId()).stream()
-        .map(OrderResponseDto::from)
+  public List<OrderResponseDto.ListDto> getSalesHistory(Member seller) {
+    return ordersRepository.findSellOrdersWithSaleCardAndImages(seller.getId()).stream()
+        .map(this::toListDto)
         .collect(Collectors.toList());
+  }
+
+  private OrderResponseDto.ListDto toListDto(Orders order) {
+    SaleCard saleCard = order.getSaleCard();
+    String thumbnailUrl = saleCard.getImages().stream()
+        .filter(SaleCardImage::getIsActive)
+        .findFirst()
+        .map(SaleCardImage::getImageUrl)
+        .orElse("/default-thumbnail.png");
+
+    return OrderResponseDto.ListDto.builder()
+        .id(order.getId())
+        .saleCardTitle(saleCard.getTitle())
+        .itemPrice(order.getItemPrice())
+        .totalPrice(order.getTotalPrice())
+        .status(order.getStatus())
+        .tradeType(order.getTradeType())
+        .sellerNickname(order.getSeller().getNickname())
+        .buyerNickname(order.getBuyer().getNickname())
+        .thumbnailUrl(thumbnailUrl)
+        .orderedAt(order.getCreatedAt())
+        .build();
   }
 }
