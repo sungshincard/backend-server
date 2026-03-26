@@ -171,6 +171,12 @@ public class OrdersService {
     public void verifyOrderAmount(String tossOrderId, Long amount) {
         Orders order = ordersRepository.findByTossOrderId(tossOrderId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+
+        // 멱등성 보장 (이미 결제된 주문은 통과시키지 않음)
+        if (order.getStatus() != Orders.OrderStatus.PENDING) {
+            log.warn("이미 결제 처리가 진행되었거나 완료된 주문입니다. tossOrderId: {}", tossOrderId);
+            throw new IllegalStateException("이미 결제가 완료된 주문입니다.");
+        }
         
         if (!order.getTotalPrice().equals(amount)) {
             log.error("Payment Amount Mismatch: DB={} / Request={}", order.getTotalPrice(), amount);
