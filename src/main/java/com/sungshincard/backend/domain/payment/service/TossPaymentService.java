@@ -10,6 +10,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
@@ -35,9 +36,13 @@ public class TossPaymentService {
 
         try {
             return restTemplate.postForObject(CONFIRM_URL, entity, TossPaymentResponse.class);
+        } catch (HttpStatusCodeException e) {
+            String errorBody = e.getResponseBodyAsString();
+            log.error("Toss Payment Confirmation Failed (HTTP {}): {}", e.getStatusCode(), errorBody);
+            throw new RuntimeException("결제 승인 과정에서 오류가 발생했습니다: " + errorBody);
         } catch (Exception e) {
             log.error("Toss Payment Confirmation Failed: {}", e.getMessage());
-            throw new RuntimeException("결제 승인 과정에서 오류가 발생했습니다: " + e.getMessage());
+            throw new RuntimeException("결제 승인 과정에서 통신 오류가 발생했습니다.");
         }
     }
 
@@ -58,6 +63,8 @@ public class TossPaymentService {
                     String.class
             );
             log.info("Toss Payment Cancelled for paymentKey: {}, Reason: {}", paymentKey, cancelReason);
+        } catch (HttpStatusCodeException e) {
+            log.error("Toss Payment Cancellation Failed (HTTP {}): {}", e.getStatusCode(), e.getResponseBodyAsString());
         } catch (Exception e) {
             log.error("Toss Payment Cancellation Failed: {}", e.getMessage());
             // 취소 실패 시엔 수동 처리를 위한 로그를 비중 있게 남김
@@ -75,9 +82,13 @@ public class TossPaymentService {
         try {
             restTemplate.postForObject(ESCROW_SHIPPING_URL + paymentKey, entity, String.class);
             log.info("Toss Escrow Shipping Info Registered for paymentKey: {}", paymentKey);
+        } catch (HttpStatusCodeException e) {
+            String errorBody = e.getResponseBodyAsString();
+            log.error("Toss Escrow Shipping Registration Failed (HTTP {}): {}", e.getStatusCode(), errorBody);
+            throw new RuntimeException("에스크로 배송 정보 등록 실패: " + errorBody);
         } catch (Exception e) {
             log.error("Toss Escrow Shipping Registration Failed: {}", e.getMessage());
-            throw new RuntimeException("에스크로 배송 정보 등록 과정에서 오류가 발생했습니다: " + e.getMessage());
+            throw new RuntimeException("에스크로 배송 정보 등록 중 통신 오류가 발생했습니다.");
         }
     }
 
