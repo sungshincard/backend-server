@@ -26,6 +26,10 @@ public class SaleCardResponseDto {
     private CardMasterDto cardMaster;
 
     public static SaleCardResponseDto from(SaleCard saleCard) {
+        return from(saleCard, true);
+    }
+
+    public static SaleCardResponseDto from(SaleCard saleCard, boolean includeCardMaster) {
         return SaleCardResponseDto.builder()
                 .id(saleCard.getId())
                 .title(saleCard.getTitle())
@@ -40,7 +44,7 @@ public class SaleCardResponseDto {
                 .imageUrls(saleCard.getImages().stream()
                         .map(image -> image.getImageUrl())
                         .collect(Collectors.toList()))
-                .cardMaster(CardMasterDto.from(saleCard.getCardMaster()))
+                .cardMaster(includeCardMaster ? CardMasterDto.from(saleCard.getCardMaster()) : null)
                 .build();
     }
 }

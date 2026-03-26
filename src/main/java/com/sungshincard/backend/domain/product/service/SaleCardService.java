@@ -137,7 +137,7 @@ public class SaleCardService {
     public List<SaleCardResponseDto> getMySaleCards(Member seller) {
         return saleCardRepository.findAllBySellerId(seller.getId())
                 .stream()
-                .map(SaleCardResponseDto::from)
+                .map(saleCard -> SaleCardResponseDto.from(saleCard, false))
                 .collect(Collectors.toList());
     }
 }
