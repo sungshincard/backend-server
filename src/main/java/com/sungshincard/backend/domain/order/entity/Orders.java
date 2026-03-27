@@ -113,7 +113,7 @@ public class Orders extends BaseTimeEntity {
     }
 
     public enum TradeType {
-        DELIVERY, FACE_TO_FACE
+        SHIPPING, DIRECT
     }
 
     public enum SettlementStatus {

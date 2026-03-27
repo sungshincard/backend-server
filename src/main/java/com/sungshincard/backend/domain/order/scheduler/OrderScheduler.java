@@ -58,15 +58,17 @@ public class OrderScheduler {
 
     // 1. 택배 거래 자동 구매 확정 (배송 완료 후 3일)
     LocalDateTime deliveryThreshold = LocalDateTime.now().minusDays(3);
-    List<Orders> deliveryOrders = ordersRepository.findOrdersForAutoConfirmDelivery(deliveryThreshold);
+    List<Orders> deliveryOrders = ordersRepository.findOrdersForAutoConfirm(
+        Orders.TradeType.SHIPPING, Orders.OrderStatus.DELIVERED, deliveryThreshold);
     for (Orders order : deliveryOrders) {
       confirmAndSettle(order);
       log.info("Auto confirmed delivery order: {}", order.getId());
     }
 
-    // 2. 대면 거래 자동 구매 확정 (결제 완료 후 7일)
+    // 2. 대면 거래 자동 구매 확정 (결제 완료 후 3일)
     LocalDateTime faceToFaceThreshold = LocalDateTime.now().minusDays(3);
-    List<Orders> faceToFaceOrders = ordersRepository.findOrdersForAutoConfirmFaceToFace(faceToFaceThreshold);
+    List<Orders> faceToFaceOrders = ordersRepository.findOrdersForAutoConfirm(
+        Orders.TradeType.DIRECT, Orders.OrderStatus.PAYMENT_COMPLETED, faceToFaceThreshold);
     for (Orders order : faceToFaceOrders) {
       confirmAndSettle(order);
       log.info("Auto confirmed face-to-face order: {}", order.getId());

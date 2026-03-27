@@ -21,12 +21,17 @@ public class SettlementService {
             return;
         }
 
+        // 정산 금액 계산: 상품 가액(itemPrice)에서 플랫폼 수수료(예: 3%)를 제외한 실제 지급 금액
+        long itemPrice = order.getItemPrice();
+        long sellerFee = (long) (itemPrice * 0.03); // 3% 플랫폼 수수료
+        long netAmount = itemPrice - sellerFee;
+
         Settlement settlement = Settlement.builder()
                 .order(order)
                 .seller(order.getSeller())
-                .grossAmount(order.getTotalPrice())
-                .feeAmount(order.getServiceFee())
-                .netAmount(order.getSettlementAmount())
+                .grossAmount(itemPrice)
+                .feeAmount(sellerFee)
+                .netAmount(netAmount)
                 .status(Settlement.Status.PENDING)
                 .build();
         

@@ -65,7 +65,7 @@ public class OrdersService {
     // 간단한 수수료 계산 (가격의 1.5%)
     long price = saleCard.getPrice();
     long serviceFee = Math.round(price * 0.015);
-    long shippingFee = requestDto.getTradeType() == Orders.TradeType.DELIVERY ? 3500 : 0;
+    long shippingFee = requestDto.getTradeType() == Orders.TradeType.SHIPPING ? 3500 : 0;
     long totalAmount = price + serviceFee + shippingFee;
 
     Orders order = Orders.builder()
@@ -116,7 +116,7 @@ public class OrdersService {
    * 구매자 직접 구매 확정
    */
   @Transactional
-  public void confirmOrder(Long orderId, Long buyerId) {
+  public void confirmPurchase(Long orderId, Long buyerId) {
     Orders order = ordersRepository.findById(orderId)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
 
@@ -132,13 +132,26 @@ public class OrdersService {
         throw new IllegalStateException("분쟁 중인 주문은 구매 확정할 수 없습니다.");
     }
 
+    // 거래 방식(TradeType)에 따른 상태 검증
+    if (order.getTradeType() == Orders.TradeType.SHIPPING) {
+        // 택배 거래: 반드시 배송 완료(DELIVERED)인 상태에서만 확정 가능
+        if (order.getStatus() != Orders.OrderStatus.DELIVERED) {
+            throw new IllegalStateException("택배 거래는 배송 완료(DELIVERED) 상태에서만 구매 확정이 가능합니다.");
+        }
+    } else if (order.getTradeType() == Orders.TradeType.DIRECT) {
+        // 대면 거래: 결제 완료(PAYMENT_COMPLETED) 등 유효한 상태면 가능
+        if (order.getStatus() != Orders.OrderStatus.PAYMENT_COMPLETED) {
+            throw new IllegalStateException("대면 거래는 결제 완료 상태에서만 구매 확정이 가능합니다.");
+        }
+    }
+
     // 상태 변경
     order.updateStatus(Orders.OrderStatus.PURCHASE_CONFIRMED);
 
     // 정산 데이터 생성
     settlementService.createSettlement(order);
 
-    log.info("Order confirmed by buyer. orderId: {}", orderId);
+    log.info("Order confirmed by buyer. orderId: {}, buyerId: {}", orderId, buyerId);
   }
 
   /**

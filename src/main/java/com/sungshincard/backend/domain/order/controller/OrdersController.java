@@ -58,4 +58,14 @@ public class OrdersController {
     ordersService.updateShippingInfo(id, carrier, trackingNumber);
     return ApiResponse.success(null, "배송 정보가 등록되었습니다.");
   }
+
+  @PostMapping("/{id}/confirm")
+  public ApiResponse<Void> confirmOrder(
+      @PathVariable Long id,
+      @AuthenticationPrincipal UserDetails userDetails) {
+
+    Member buyer = memberService.findByEmail(userDetails.getUsername());
+    ordersService.confirmPurchase(id, buyer.getId());
+    return ApiResponse.success(null, "구매 확정되었습니다.");
+  }
 }

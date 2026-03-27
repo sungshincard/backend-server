@@ -51,16 +51,11 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
   @Query("SELECT o FROM Orders o " +
       "JOIN FETCH o.seller " +
       "JOIN FETCH o.saleCard " +
-      "WHERE o.tradeType = com.sungshincard.backend.domain.order.entity.Orders.TradeType.DELIVERY " +
-      "AND o.status = com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.DELIVERED " +
+      "WHERE o.tradeType = :tradeType " +
+      "AND o.status = :status " +
       "AND o.updatedAt < :threshold")
-  List<Orders> findOrdersForAutoConfirmDelivery(@Param("threshold") java.time.LocalDateTime threshold);
+  List<Orders> findOrdersForAutoConfirm(@Param("tradeType") Orders.TradeType tradeType, 
+                                        @Param("status") Orders.OrderStatus status, 
+                                        @Param("threshold") java.time.LocalDateTime threshold);
 
-  @Query("SELECT o FROM Orders o " +
-      "JOIN FETCH o.seller " +
-      "JOIN FETCH o.saleCard " +
-      "WHERE o.tradeType = com.sungshincard.backend.domain.order.entity.Orders.TradeType.FACE_TO_FACE " +
-      "AND o.status = com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.PAYMENT_COMPLETED " +
-      "AND o.paidAt < :threshold")
-  List<Orders> findOrdersForAutoConfirmFaceToFace(@Param("threshold") java.time.LocalDateTime threshold);
 }
