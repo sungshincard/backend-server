@@ -106,6 +106,7 @@ public class MemberService {
     }
 
     return new MemberController.MemberProfileResponse(
+        member.getId(),
         member.getEmail(),
         member.getNickname(),
         member.getName(),

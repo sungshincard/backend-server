@@ -72,6 +72,7 @@ public class MemberController {
     @Setter
     @AllArgsConstructor
     public static class MemberProfileResponse {
+        private Long id;
         private String email;
         private String nickname;
         private String name;

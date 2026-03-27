@@ -24,13 +24,18 @@ public class SaleCardResponseDto {
     private Integer viewCount;
     private Integer favoriteCount;
     private Boolean isWatched;
+    private Long orderId;
     private CardMasterDto cardMaster;
 
     public static SaleCardResponseDto from(SaleCard saleCard) {
-        return from(saleCard, true, false);
+        return from(saleCard, true, false, null);
     }
 
     public static SaleCardResponseDto from(SaleCard saleCard, boolean includeCardMaster, boolean isWatched) {
+        return from(saleCard, includeCardMaster, isWatched, null);
+    }
+
+    public static SaleCardResponseDto from(SaleCard saleCard, boolean includeCardMaster, boolean isWatched, Long orderId) {
         return SaleCardResponseDto.builder()
                 .id(saleCard.getId())
                 .title(saleCard.getTitle())
@@ -43,6 +48,7 @@ public class SaleCardResponseDto {
                 .viewCount(saleCard.getViewCount())
                 .favoriteCount(saleCard.getFavoriteCount())
                 .isWatched(isWatched)
+                .orderId(orderId)
                 .imageUrls(saleCard.getImages().stream()
                         .map(image -> image.getImageUrl())
                         .collect(Collectors.toList()))

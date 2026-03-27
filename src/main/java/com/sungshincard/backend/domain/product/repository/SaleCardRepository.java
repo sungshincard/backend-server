@@ -18,7 +18,8 @@ public interface SaleCardRepository extends JpaRepository<SaleCard, Long> {
     @Query("SELECT DISTINCT s FROM SaleCard s " +
            "JOIN FETCH s.seller " +
            "LEFT JOIN FETCH s.images " +
-           "WHERE s.seller.id = :sellerId")
+           "WHERE s.seller.id = :sellerId " +
+           "ORDER BY s.createdAt DESC")
     List<SaleCard> findAllBySellerId(@Param("sellerId") Long sellerId);
     
     List<SaleCard> findAllByCardMasterIdAndStatusOrderByPriceAsc(Long cardMasterId, SaleCard.Status status);

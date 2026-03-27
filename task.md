@@ -224,7 +224,8 @@
         - [o] `OrdersService`에 구현된 `updateShippingInfo`를 호출할 `POST /api/v1/orders/{id}/shipping` API 작성
         - [o] 프론트엔드에서 넘어온 택배사 코드(kr.cjlogistics 등)를 토스 에스크로 규격에 맞게 매핑/검증
     - [o] 배송 상태 추적 API
-    - [o] 배송완료 상태 반영
+    - [o] 배송 준비(PREPARING) 단계 및 SHIPMENT 엔티티 연동 완료
+    - [o] 배송 완료 상태 반영 완료
 
 ---
 

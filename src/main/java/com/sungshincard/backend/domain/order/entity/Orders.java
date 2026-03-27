@@ -104,6 +104,7 @@ public class Orders extends BaseTimeEntity {
   public enum OrderStatus {
     PENDING, // 결제 처리 중
     PAYMENT_COMPLETED, // 결제 완료 (돈이 플랫폼에 묶인 상태)
+    PREPARING, // 배송 준비 중
     SHIPPING, // 배송 중 (택배 거래 전용)
     DELIVERED, // 배송 완료 (택배 거래 전용)
     PURCHASE_CONFIRMED, // 구매 확정 (정산 대기 상태)

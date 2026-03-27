@@ -14,7 +14,9 @@ public class OrderResponseDto {
     private String tossOrderId;
     private Long saleCardId;
     private String saleCardTitle;
+    private Long sellerId;
     private String sellerNickname;
+    private Long buyerId;
     private String buyerNickname;
     private Long itemPrice;
     private Long totalPrice;
@@ -46,7 +48,9 @@ public class OrderResponseDto {
                 .tossOrderId(order.getTossOrderId())
                 .saleCardId(order.getSaleCard().getId())
                 .saleCardTitle(order.getSaleCard().getTitle())
+                .sellerId(order.getSeller().getId())
                 .sellerNickname(order.getSeller().getNickname())
+                .buyerId(order.getBuyer().getId())
                 .buyerNickname(order.getBuyer().getNickname())
                 .itemPrice(order.getItemPrice())
                 .totalPrice(order.getTotalPrice())
@@ -76,6 +80,7 @@ public class OrderResponseDto {
     @AllArgsConstructor
     public static class ListDto {
         private Long id;
+        private Long saleCardId;
         private String saleCardTitle;
         private Long itemPrice;
         private Long totalPrice;

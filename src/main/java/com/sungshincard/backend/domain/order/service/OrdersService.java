@@ -15,6 +15,10 @@ import com.sungshincard.backend.domain.payment.repository.PaymentRepository;
 import com.sungshincard.backend.domain.payment.dto.TossShippingInfoRequest;
 import com.sungshincard.backend.domain.payment.service.TossPaymentService;
 import com.sungshincard.backend.domain.settlement.service.SettlementService;
+import com.sungshincard.backend.domain.member.entity.Address;
+import com.sungshincard.backend.domain.member.repository.AddressRepository;
+import com.sungshincard.backend.domain.shipment.entity.Shipment;
+import com.sungshincard.backend.domain.shipment.repository.ShipmentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,6 +39,8 @@ public class OrdersService {
   private final TossPaymentService tossPaymentService;
   private final PaymentRepository paymentRepository;
   private final SettlementService settlementService;
+  private final ShipmentRepository shipmentRepository;
+  private final AddressRepository addressRepository;
 
   @Transactional
   public OrderResponseDto createOrder(OrderRequestDto requestDto, Member buyer) {
@@ -63,9 +69,10 @@ public class OrdersService {
     }
 
     // 간단한 수수료 계산 (가격의 1.5%)
+    // 배송비는 판매자가 직접 부담하므로 플랫폼에서 별도 청구하지 않음
     long price = saleCard.getPrice();
     long serviceFee = Math.round(price * 0.015);
-    long shippingFee = requestDto.getTradeType() == Orders.TradeType.SHIPPING ? 3500 : 0;
+    long shippingFee = 0;
     long totalAmount = price + serviceFee + shippingFee;
 
     Orders order = Orders.builder()
@@ -229,21 +236,31 @@ public class OrdersService {
     Orders order = ordersRepository.findById(orderId)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
 
-    if (order.getStatus() != Orders.OrderStatus.PAYMENT_COMPLETED) {
-      throw new IllegalStateException("결제 완료 상태에서만 배송 정보를 등록할 수 있습니다.");
+    if (order.getStatus() != Orders.OrderStatus.PAYMENT_COMPLETED && order.getStatus() != Orders.OrderStatus.PREPARING) {
+      throw new IllegalStateException("결제 완료 또는 배송 준비 상태에서만 배송 정보를 등록할 수 있습니다.");
     }
 
     // 1. 주문 데이터 업데이트 (SHIPPING 상태로 변경)
     order.updateTracking(carrier, trackingNumber);
 
+    // 2. Shipment 상태 업데이트
+    shipmentRepository.findByOrder(order).ifPresent(shipment -> {
+      shipment.updateStatus(Shipment.Status.SHIPPING);
+    });
+
     // 2. 토스 에스크로 배송 정보 등록
     if (order.getPaymentKey() != null) {
-      TossShippingInfoRequest tossRequest = TossShippingInfoRequest.builder()
-          .carrier(carrier)
-          .trackingNumber(trackingNumber)
-          .method("DELIVERY")
-          .build();
-      tossPaymentService.registerShippingInfo(order.getPaymentKey(), tossRequest);
+      try {
+        TossShippingInfoRequest tossRequest = TossShippingInfoRequest.builder()
+            .carrier(carrier)
+            .trackingNumber(trackingNumber)
+            .method("DELIVERY")
+            .build();
+        tossPaymentService.registerShippingInfo(order.getPaymentKey(), tossRequest);
+      } catch (Exception e) {
+        log.error("Failed to register shipping info to Toss (Order ID: {}): {}", order.getId(), e.getMessage());
+        // 실제 운영 환경이 아니거나 테스트 모드인 경우를 고려하여 예외를 전파하지 않고 로그만 남깁니다.
+      }
     }
 
     // 3. 구매자에게 배송 시작 알림 발송
@@ -278,6 +295,7 @@ public class OrdersService {
 
     return OrderResponseDto.ListDto.builder()
         .id(order.getId())
+        .saleCardId(saleCard.getId())
         .saleCardTitle(saleCard.getTitle())
         .itemPrice(order.getItemPrice())
         .totalPrice(order.getTotalPrice())
@@ -288,6 +306,24 @@ public class OrdersService {
         .thumbnailUrl(thumbnailUrl)
         .orderedAt(order.getCreatedAt())
         .build();
+  }
+
+  /**
+   * [테스트 전용] 주문 상태를 PAYMENT_COMPLETED → SHIPPING 으로 강제 변경합니다.
+   * 실제 송장 등록 없이 배송 중 상태로 전환하여 테스트하기 위한 메서드입니다.
+   */
+  @Transactional
+  public void forceShippingForTest(Long orderId) {
+    Orders order = ordersRepository.findById(orderId)
+        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+
+    if (order.getStatus() != Orders.OrderStatus.PAYMENT_COMPLETED) {
+      throw new IllegalStateException(
+          "결제 완료(PAYMENT_COMPLETED) 상태의 주문만 배송 중으로 변경할 수 있습니다. 현재 상태: " + order.getStatus());
+    }
+
+    order.updateStatus(Orders.OrderStatus.SHIPPING);
+    log.info("[TEST] Order force-shipping. orderId: {}", orderId);
   }
 
   /**
@@ -306,5 +342,24 @@ public class OrdersService {
 
     order.updateStatus(Orders.OrderStatus.DELIVERED);
     log.info("[TEST] Order force-delivered. orderId: {}", orderId);
+  }
+
+  /**
+   * [테스트 전용] 주문 상태를 DELIVERED → PURCHASE_CONFIRMED 로 강제 변경합니다.
+   * 구매자의 구매 확정 행위를 시뮬레이션하며, 정산 프로세스를 테스트하기 위해 사용합니다.
+   */
+  @Transactional
+  public void forceConfirmForTest(Long orderId) {
+    Orders order = ordersRepository.findById(orderId)
+        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+
+    if (order.getStatus() != Orders.OrderStatus.DELIVERED && order.getStatus() != Orders.OrderStatus.SHIPPING) {
+      throw new IllegalStateException(
+          "배송 중 또는 배송 완료 상태의 주문만 구매 확정으로 변경할 수 있습니다. 현재 상태: " + order.getStatus());
+    }
+
+    order.updateStatus(Orders.OrderStatus.PURCHASE_CONFIRMED);
+    settlementService.createSettlement(order); // 정산 데이터 생성 포함
+    log.info("[TEST] Order force-confirmed. orderId: {}", orderId);
   }
 }

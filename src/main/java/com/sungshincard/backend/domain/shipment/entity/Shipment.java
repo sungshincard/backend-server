@@ -59,4 +59,13 @@ public class Shipment extends BaseTimeEntity {
         LOST,      // 분실
         RETURNED   // 반송
     }
+
+    public void updateStatus(Status status) {
+        this.status = status;
+        if (status == Status.SHIPPING) {
+            this.shippedAt = LocalDateTime.now();
+        } else if (status == Status.DELIVERED) {
+            this.deliveredAt = LocalDateTime.now();
+        }
+    }
 }

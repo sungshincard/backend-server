@@ -29,6 +29,7 @@ public class SaleCardService {
     private final SaleCardRepository saleCardRepository;
     private final CardMasterRepository cardMasterRepository;
     private final WatchlistRepository watchlistRepository;
+    private final com.sungshincard.backend.domain.order.repository.OrdersRepository ordersRepository;
     private final NotificationService notificationService;
 
     @Transactional
@@ -144,7 +145,15 @@ public class SaleCardService {
     public List<SaleCardResponseDto> getMySaleCards(Member seller) {
         return saleCardRepository.findAllBySellerId(seller.getId())
                 .stream()
-                .map(saleCard -> SaleCardResponseDto.from(saleCard, false, false))
+                .map(saleCard -> {
+                    Long orderId = null;
+                    if (saleCard.getStatus() == SaleCard.Status.SOLD || saleCard.getStatus() == SaleCard.Status.PENDING) {
+                        orderId = ordersRepository.findBySaleCard(saleCard)
+                                .map(o -> o.getId())
+                                .orElse(null);
+                    }
+                    return SaleCardResponseDto.from(saleCard, false, false, orderId);
+                })
                 .collect(Collectors.toList());
     }
 }
