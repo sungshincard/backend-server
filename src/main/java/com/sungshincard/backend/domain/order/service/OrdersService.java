@@ -289,4 +289,22 @@ public class OrdersService {
         .orderedAt(order.getCreatedAt())
         .build();
   }
+
+  /**
+   * [테스트 전용] 주문 상태를 SHIPPING → DELIVERED 로 강제 변경합니다.
+   * 실제 배송이 이루어지지 않는 개발 환경에서 구매 확정/정산 프로세스를 테스트하기 위한 메서드입니다.
+   */
+  @Transactional
+  public void forceDeliverForTest(Long orderId) {
+    Orders order = ordersRepository.findById(orderId)
+        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+
+    if (order.getStatus() != Orders.OrderStatus.SHIPPING) {
+      throw new IllegalStateException(
+          "배송 중(SHIPPING) 상태의 주문만 배송 완료로 변경할 수 있습니다. 현재 상태: " + order.getStatus());
+    }
+
+    order.updateStatus(Orders.OrderStatus.DELIVERED);
+    log.info("[TEST] Order force-delivered. orderId: {}", orderId);
+  }
 }
