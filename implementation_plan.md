@@ -239,17 +239,17 @@
 - [o] **Phase 3-D**: 사용자 카드 출품(SaleCard) 비즈니스 로직
 - [o] **Phase 3-E**: 주문/결제/배송 기초 도메인 설계 및 주문 생성 API
 
-### Phase 4. 주문/결제/배송 인프라 구축 (**진행 예정**)
-- [ ] **Phase 4-A**: 토스페이먼츠(Toss Payments) 에스크로 연동
-    - [ ] `application.yml` 내 Toss 클라이언트/시크릿 키 설정 및 RestTemplate 빈 등록
-    - [ ] 결제 승인 API (`POST /v1/payments/confirm`) 및 에스크로 배송정보 등록 API 연동
-    - [ ] 결제 위변조 방지를 위한 서버 사이드 금액 검증 및 상점 주문 데이터 동기화
-- [ ] **Phase 4-B**: 배송(Shipment) 및 주문 관리 안정화
-    - [ ] Shipment 엔티티 및 송장 등록 시 Toss 에스크로 배송정보 연동 (`/v1/escrow/shipping-info/{paymentKey}`)
-    - [ ] 주문 동시성 제어 (DB Lock 또는 Redis 분산 락을 통한 재고/상태 중복 방어)
-    - [ ] 미결제 주문 자동 취소 스케줄러 (Toss 가상계좌/결제대기 대응)
+### Phase 4. 주문/결제/배송 인프라 구축 (**완료**)
+- [o] **Phase 4-A**: 토스페이먼츠(Toss Payments) 에스크로 연동
+    - [o] `application.yml` 내 Toss 클라이언트/시크릿 키 설정 및 RestTemplate 빈 등록
+    - [o] 결제 승인 API (`POST /v1/payments/confirm`) 및 에스크로 배송정보 등록 API 연동
+    - [o] 결제 위변조 방지를 위한 서버 사이드 금액 검증 및 상점 주문 데이터 동기화
+- [o] **Phase 4-B**: 배송(Shipment) 및 주문 관리 안정화
+    - [o] Shipment 엔티티 및 송장 등록 시 Toss 에스크로 배송정보 연동 (`/v1/escrow/shipping-info/{paymentKey}`)
+    - [o] 주문 동시성 제어 (DB Lock 또는 Redis 분산 락을 통한 재고/상태 중복 방어)
+    - [o] 미결제 주문 자동 취소 스케줄러 (Toss 가상계좌/결제대기 대응)
 
-### Phase 5. 정산 구조 및 거래 정책 자동화
+### Phase 5. 정산 구조 및 거래 정책 자동화 (**진행 중**)
 - Settlement 엔티티 및 자동 정산 로직
 - 판매자 발송 기한 및 자동 구매 확정 정책 엔진
 
