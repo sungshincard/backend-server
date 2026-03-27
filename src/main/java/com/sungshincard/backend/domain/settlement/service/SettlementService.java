@@ -7,12 +7,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sungshincard.backend.domain.settlement.dto.SettlementResponseDto;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class SettlementService {
 
     private final SettlementRepository settlementRepository;
+
+    public List<SettlementResponseDto> getMySettlements(Long memberId) {
+        return settlementRepository.findBySellerIdOrderByCreatedAtDesc(memberId)
+                .stream()
+                .map(SettlementResponseDto::from)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public void createSettlement(Orders order) {
