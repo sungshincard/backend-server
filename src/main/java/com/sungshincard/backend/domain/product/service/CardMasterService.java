@@ -87,7 +87,7 @@ public class CardMasterService {
         }
         
         java.util.List<Orders.OrderStatus> tradeStatuses = java.util.Arrays.asList(
-                Orders.OrderStatus.PAID, Orders.OrderStatus.SHIPPED,
+                Orders.OrderStatus.PAYMENT_COMPLETED, Orders.OrderStatus.SHIPPING,
                 Orders.OrderStatus.DELIVERED, Orders.OrderStatus.PURCHASE_CONFIRMED);
         
         Long recentTradePrice = ordersRepository.findTopBySaleCard_CardMaster_IdAndStatusInOrderByCreatedAtDesc(id, tradeStatuses)

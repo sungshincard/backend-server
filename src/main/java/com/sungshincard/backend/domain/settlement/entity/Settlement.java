@@ -43,7 +43,7 @@ public class Settlement extends BaseTimeEntity {
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   @Builder.Default
-  private Status status = Status.READY;
+  private Status status = Status.PENDING;
 
   @Column(name = "settled_at")
   private LocalDateTime settledAt;
@@ -52,6 +52,9 @@ public class Settlement extends BaseTimeEntity {
   private String holdReason;
 
   public enum Status {
-    READY, ON_HOLD, COMPLETED, CANCELED
+    PENDING,   // 정산 대기
+    ON_HOLD,   // 정산 보류 (분쟁 발생 등)
+    COMPLETED, // 정산 완료
+    CANCELLED  // 정산 취소
   }
 }

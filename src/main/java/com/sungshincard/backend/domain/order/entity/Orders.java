@@ -102,7 +102,14 @@ public class Orders extends BaseTimeEntity {
     private TradeType tradeType;
 
     public enum OrderStatus {
-        PENDING, PAID, SHIPPED, DELIVERED, PURCHASE_CONFIRMED, CANCELLED, DISPUTED
+        PENDING, // 결제 처리 중
+        PAYMENT_COMPLETED, // 결제 완료 (돈이 플랫폼에 묶인 상태)
+        SHIPPING, // 배송 중 (택배 거래 전용)
+        DELIVERED, // 배송 완료 (택배 거래 전용)
+        PURCHASE_CONFIRMED, // 구매 확정 (정산 대기 상태)
+        SETTLEMENT_DONE,   // 정산 완료 (실제 판매자에게 입금됨)
+        CANCELLED, // 주문 취소
+        DISPUTED // 분쟁 중 (신고 접수 시 정산 보류)
     }
 
     public enum TradeType {
@@ -125,14 +132,14 @@ public class Orders extends BaseTimeEntity {
         this.carrier = carrier;
         this.trackingNumber = trackingNumber;
         this.shippedAt = java.time.LocalDateTime.now();
-        this.status = OrderStatus.SHIPPED;
+        this.status = OrderStatus.SHIPPING;
     }
 
     public void updatePaymentInfo(String paymentKey, String paymentMethod) {
         this.paymentKey = paymentKey;
         this.paymentMethod = paymentMethod;
         this.paidAt = java.time.LocalDateTime.now();
-        this.status = OrderStatus.PAID;
+        this.status = OrderStatus.PAYMENT_COMPLETED;
     }
 
     public void updateTossOrderId(String tossOrderId) {

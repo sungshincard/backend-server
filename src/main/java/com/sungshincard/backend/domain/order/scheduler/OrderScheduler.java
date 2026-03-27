@@ -3,6 +3,7 @@ package com.sungshincard.backend.domain.order.scheduler;
 import com.sungshincard.backend.domain.order.entity.Orders;
 import com.sungshincard.backend.domain.order.repository.OrdersRepository;
 import com.sungshincard.backend.domain.product.entity.SaleCard;
+import com.sungshincard.backend.domain.settlement.service.SettlementService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,30 +18,63 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderScheduler {
 
-    private final OrdersRepository ordersRepository;
+  private final OrdersRepository ordersRepository;
+  private final SettlementService settlementService;
 
-    /**
-     * 30분 동안 결제가 완료되지 않은 PENDING 주문을 자동 취소 처리
-     * 매 10분마다 실행
-     */
-    @Scheduled(fixedDelay = 600000) // 10분
-    @Transactional
-    public void cancelExpiredOrders() {
-        LocalDateTime expirationTime = LocalDateTime.now().minusMinutes(30);
-        
-        List<Orders> expiredOrders = ordersRepository.findAllByStatusAndCreatedAtBefore(
-                Orders.OrderStatus.PENDING, expirationTime);
+  /**
+   * 30분 동안 결제가 완료되지 않은 PENDING 주문을 자동 취소 처리
+   * 매 10분마다 실행
+   */
+  @Scheduled(fixedDelay = 600000) // 10분
+  @Transactional
+  public void cancelExpiredOrders() {
+    LocalDateTime expirationTime = LocalDateTime.now().minusMinutes(30);
 
-        if (expiredOrders.isEmpty()) {
-            return;
-        }
+    List<Orders> expiredOrders = ordersRepository.findAllByStatusAndCreatedAtBefore(
+        Orders.OrderStatus.PENDING, expirationTime);
 
-        log.info("Cancelling {} expired PENDING orders", expiredOrders.size());
-
-        for (Orders order : expiredOrders) {
-            order.updateStatus(Orders.OrderStatus.CANCELLED);
-            // 연관된 SaleCard를 다시 ACTIVE로 변경
-            order.getSaleCard().updateStatus(SaleCard.Status.ACTIVE);
-        }
+    if (expiredOrders.isEmpty()) {
+      return;
     }
+
+    log.info("Cancelling {} expired PENDING orders", expiredOrders.size());
+
+    for (Orders order : expiredOrders) {
+      order.updateStatus(Orders.OrderStatus.CANCELLED);
+      // 연관된 SaleCard를 다시 ACTIVE로 변경
+      order.getSaleCard().updateStatus(SaleCard.Status.ACTIVE);
+    }
+  }
+
+  /**
+   * 자동 구매 확정 처리 (매일 자정)
+   * - 택배 거래: 배송 완료 후 3일 경과 시 자동 구매 확정
+   * - 대면 거래: 결제 완료 후 3일 경과 시 자동 구매 확정
+   */
+  @Scheduled(cron = "0 0 0 * * *")
+  @Transactional
+  public void autoConfirmOrders() {
+    log.info("Starting auto-confirmation batch job...");
+
+    // 1. 택배 거래 자동 구매 확정 (배송 완료 후 3일)
+    LocalDateTime deliveryThreshold = LocalDateTime.now().minusDays(3);
+    List<Orders> deliveryOrders = ordersRepository.findOrdersForAutoConfirmDelivery(deliveryThreshold);
+    for (Orders order : deliveryOrders) {
+      confirmAndSettle(order);
+      log.info("Auto confirmed delivery order: {}", order.getId());
+    }
+
+    // 2. 대면 거래 자동 구매 확정 (결제 완료 후 7일)
+    LocalDateTime faceToFaceThreshold = LocalDateTime.now().minusDays(3);
+    List<Orders> faceToFaceOrders = ordersRepository.findOrdersForAutoConfirmFaceToFace(faceToFaceThreshold);
+    for (Orders order : faceToFaceOrders) {
+      confirmAndSettle(order);
+      log.info("Auto confirmed face-to-face order: {}", order.getId());
+    }
+  }
+
+  private void confirmAndSettle(Orders order) {
+    order.updateStatus(Orders.OrderStatus.PURCHASE_CONFIRMED);
+    settlementService.createSettlement(order);
+  }
 }

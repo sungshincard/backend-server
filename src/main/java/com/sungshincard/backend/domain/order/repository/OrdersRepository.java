@@ -13,21 +13,21 @@ import java.util.List;
 @Repository
 public interface OrdersRepository extends JpaRepository<Orders, Long> {
   @Query("SELECT DISTINCT o FROM Orders o " +
-         "JOIN FETCH o.saleCard s " +
-         "JOIN FETCH o.seller " +
-         "JOIN FETCH o.buyer " +
-         "LEFT JOIN FETCH s.images " +
-         "WHERE o.buyer.id = :buyerId " +
-         "ORDER BY o.createdAt DESC")
+      "JOIN FETCH o.saleCard s " +
+      "JOIN FETCH o.seller " +
+      "JOIN FETCH o.buyer " +
+      "LEFT JOIN FETCH s.images " +
+      "WHERE o.buyer.id = :buyerId " +
+      "ORDER BY o.createdAt DESC")
   List<Orders> findBuyOrdersWithSaleCardAndImages(@Param("buyerId") Long buyerId);
 
   @Query("SELECT DISTINCT o FROM Orders o " +
-         "JOIN FETCH o.saleCard s " +
-         "JOIN FETCH o.seller " +
-         "JOIN FETCH o.buyer " +
-         "LEFT JOIN FETCH s.images " +
-         "WHERE o.seller.id = :sellerId " +
-         "ORDER BY o.createdAt DESC")
+      "JOIN FETCH o.saleCard s " +
+      "JOIN FETCH o.seller " +
+      "JOIN FETCH o.buyer " +
+      "LEFT JOIN FETCH s.images " +
+      "WHERE o.seller.id = :sellerId " +
+      "ORDER BY o.createdAt DESC")
   List<Orders> findSellOrdersWithSaleCardAndImages(@Param("sellerId") Long sellerId);
 
   List<Orders> findAllByBuyerId(Long buyerId);
@@ -47,4 +47,20 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
   java.util.Optional<Orders> findBySaleCard(SaleCard saleCard);
 
   java.util.Optional<Orders> findByTossOrderId(String tossOrderId);
+
+  @Query("SELECT o FROM Orders o " +
+      "JOIN FETCH o.seller " +
+      "JOIN FETCH o.saleCard " +
+      "WHERE o.tradeType = com.sungshincard.backend.domain.order.entity.Orders.TradeType.DELIVERY " +
+      "AND o.status = com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.DELIVERED " +
+      "AND o.updatedAt < :threshold")
+  List<Orders> findOrdersForAutoConfirmDelivery(@Param("threshold") java.time.LocalDateTime threshold);
+
+  @Query("SELECT o FROM Orders o " +
+      "JOIN FETCH o.seller " +
+      "JOIN FETCH o.saleCard " +
+      "WHERE o.tradeType = com.sungshincard.backend.domain.order.entity.Orders.TradeType.FACE_TO_FACE " +
+      "AND o.status = com.sungshincard.backend.domain.order.entity.Orders.OrderStatus.PAYMENT_COMPLETED " +
+      "AND o.paidAt < :threshold")
+  List<Orders> findOrdersForAutoConfirmFaceToFace(@Param("threshold") java.time.LocalDateTime threshold);
 }

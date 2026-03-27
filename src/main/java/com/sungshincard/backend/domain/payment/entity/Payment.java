@@ -41,7 +41,7 @@ public class Payment extends BaseTimeEntity {
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   @Builder.Default
-  private Status status = Status.READY;
+  private Status status = Status.PENDING;
 
   @Column(length = 100)
   private String provider;
@@ -60,6 +60,10 @@ public class Payment extends BaseTimeEntity {
   }
 
   public enum Status {
-    READY, PAID, FAILED, CANCELED, REFUNDED
+    PENDING,           // 결제 처리 중
+    PAYMENT_COMPLETED, // 결제 완료
+    FAILED,            // 결제 실패
+    CANCELLED,         // 결제 취소
+    REFUNDED           // 환불 완료
   }
 }

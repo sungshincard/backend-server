@@ -53,6 +53,10 @@ public class Shipment extends BaseTimeEntity {
     private LocalDateTime deliveredAt;
 
     public enum Status {
-        READY, IN_TRANSIT, DELIVERED, LOST, RETURNED
+        READY,     // 배송 준비 중
+        SHIPPING,  // 배송 중
+        DELIVERED, // 배송 완료
+        LOST,      // 분실
+        RETURNED   // 반송
     }
 }

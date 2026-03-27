@@ -12,10 +12,9 @@ import com.sungshincard.backend.domain.notification.entity.Notification;
 import com.sungshincard.backend.domain.notification.service.NotificationService;
 import com.sungshincard.backend.domain.payment.entity.Payment;
 import com.sungshincard.backend.domain.payment.repository.PaymentRepository;
-import com.sungshincard.backend.domain.settlement.entity.Settlement;
-import com.sungshincard.backend.domain.settlement.repository.SettlementRepository;
 import com.sungshincard.backend.domain.payment.dto.TossShippingInfoRequest;
 import com.sungshincard.backend.domain.payment.service.TossPaymentService;
+import com.sungshincard.backend.domain.settlement.service.SettlementService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,7 @@ public class OrdersService {
   private final NotificationService notificationService;
   private final TossPaymentService tossPaymentService;
   private final PaymentRepository paymentRepository;
-  private final SettlementRepository settlementRepository;
+  private final SettlementService settlementService;
 
   @Transactional
   public OrderResponseDto createOrder(OrderRequestDto requestDto, Member buyer) {
@@ -43,8 +42,8 @@ public class OrdersService {
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 출품 카드입니다."));
 
     if (saleCard.getStatus() != SaleCard.Status.ACTIVE) {
-      // 이미 RESERVED 상태라면, 현재 구매자가 본인인지 확인하여 PENDING 주문이 있으면 해당 ID 반환
-      if (saleCard.getStatus() == SaleCard.Status.RESERVED) {
+      // 이미 PENDING 상태라면, 현재 구매자가 본인인지 확인하여 PENDING 주문이 있으면 해당 ID 반환
+      if (saleCard.getStatus() == SaleCard.Status.PENDING) {
         Orders existingOrder = ordersRepository.findAllBySaleCardAndStatus(saleCard, Orders.OrderStatus.PENDING)
             .stream()
             .filter(order -> order.getBuyer().getId().equals(buyer.getId()))
@@ -94,8 +93,8 @@ public class OrdersService {
     String tossOrderId = savedOrder.getId() + "_" + System.currentTimeMillis();
     savedOrder.updateTossOrderId(tossOrderId);
 
-    // 출품 상태를 RESERVED로 변경
-    saleCard.updateStatus(SaleCard.Status.RESERVED);
+    // 출품 상태를 PENDING(결제 대기)으로 변경
+    saleCard.updateStatus(SaleCard.Status.PENDING);
 
     // 판매자에게 알림 발송
     notificationService.send(
@@ -114,6 +113,35 @@ public class OrdersService {
   }
 
   /**
+   * 구매자 직접 구매 확정
+   */
+  @Transactional
+  public void confirmOrder(Long orderId, Long buyerId) {
+    Orders order = ordersRepository.findById(orderId)
+        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+
+    if (!order.getBuyer().getId().equals(buyerId)) {
+        throw new IllegalStateException("본인의 주문만 구매 확정할 수 있습니다.");
+    }
+
+    if (order.getStatus() == Orders.OrderStatus.PURCHASE_CONFIRMED) {
+        return; // 이미 완료됨
+    }
+
+    if (order.getStatus() == Orders.OrderStatus.DISPUTED) {
+        throw new IllegalStateException("분쟁 중인 주문은 구매 확정할 수 없습니다.");
+    }
+
+    // 상태 변경
+    order.updateStatus(Orders.OrderStatus.PURCHASE_CONFIRMED);
+
+    // 정산 데이터 생성
+    settlementService.createSettlement(order);
+
+    log.info("Order confirmed by buyer. orderId: {}", orderId);
+  }
+
+  /**
    * 결제 완료 처리 (Toss 승인 후 호출)
    */
   @Transactional
@@ -126,10 +154,11 @@ public class OrdersService {
       return;
     }
 
+    // 결제 완료 처리
     order.updatePaymentInfo(paymentKey, paymentMethod);
     order.getSaleCard().updateStatus(SaleCard.Status.SOLD);
 
-    // 3. Payment 레코드 생성
+    // 3. Payment 레코드 생성 (Payment 정보 보관)
     Payment payment = Payment.builder()
         .order(order)
         .payer(order.getBuyer())
@@ -137,21 +166,10 @@ public class OrdersService {
         .paymentMethod(mapToPaymentMethod(paymentMethod))
         .provider("TOSS")
         .providerTxId(paymentKey)
-        .status(Payment.Status.PAID)
+        .status(Payment.Status.PAYMENT_COMPLETED)
         .paidAt(java.time.LocalDateTime.now())
         .build();
     paymentRepository.save(payment);
-
-    // 4. Settlement 레코드 생성
-    Settlement settlement = Settlement.builder()
-        .order(order)
-        .seller(order.getSeller())
-        .grossAmount(order.getTotalPrice())
-        .feeAmount(order.getServiceFee())
-        .netAmount(order.getSettlementAmount())
-        .status(Settlement.Status.READY)
-        .build();
-    settlementRepository.save(settlement);
 
     // 최종 결제 완료 알림 발송 (판매자)
     notificationService.send(
@@ -198,11 +216,11 @@ public class OrdersService {
     Orders order = ordersRepository.findById(orderId)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
 
-    if (order.getStatus() != Orders.OrderStatus.PAID) {
+    if (order.getStatus() != Orders.OrderStatus.PAYMENT_COMPLETED) {
       throw new IllegalStateException("결제 완료 상태에서만 배송 정보를 등록할 수 있습니다.");
     }
 
-    // 1. 주문 데이터 업데이트 (SHIPPED 상태로 변경)
+    // 1. 주문 데이터 업데이트 (SHIPPING 상태로 변경)
     order.updateTracking(carrier, trackingNumber);
 
     // 2. 토스 에스크로 배송 정보 등록

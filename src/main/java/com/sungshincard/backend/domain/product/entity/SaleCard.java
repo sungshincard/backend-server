@@ -67,7 +67,11 @@ public class SaleCard extends BaseTimeEntity {
 
 
     public enum Status {
-        ACTIVE, RESERVED, SOLD, HIDDEN, DELETED
+        ACTIVE,   // 판매 중
+        PENDING,  // 결제 진행 중 (예약)
+        SOLD,     // 판매 완료
+        HIDDEN,   // 숨김 처리
+        DELETED   // 삭제 처리
     }
 
     public void updateStatus(Status status) {
